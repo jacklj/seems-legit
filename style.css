@@ -1,0 +1,242 @@
+:root {
+  color-scheme: light;
+  --ink: #1c1512;
+  --brick: #c84d3a;
+  --gold: #f3c16c;
+  --mint: #6fbfa7;
+  --fog: #f8f0e6;
+  --shadow: rgba(28, 21, 18, 0.18);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Gill Sans", "Trebuchet MS", "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at 10% 10%, #f6dbc1 0%, transparent 40%),
+    radial-gradient(circle at 90% 20%, #f8f0e6 0%, transparent 45%),
+    linear-gradient(160deg, #f0c49a 0%, #f7eadb 45%, #f4d1ae 100%);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 18px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.hero {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  background: rgba(248, 240, 230, 0.85);
+  border-radius: 18px;
+  padding: 18px 22px;
+  box-shadow: 0 12px 30px var(--shadow);
+}
+
+.hero-text h1 {
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  font-size: clamp(2rem, 3vw, 3rem);
+  margin: 6px 0;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.kicker {
+  margin: 0;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+}
+
+.subhead {
+  margin: 0;
+  max-width: 420px;
+  color: #3a2b25;
+}
+
+.hud {
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: right;
+}
+
+.meter {
+  background: #efe3d6;
+  height: 12px;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid rgba(28, 21, 18, 0.2);
+}
+
+.meter-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--mint), var(--gold));
+  transition: width 0.2s ease;
+}
+
+.hud-stats {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.game-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+}
+
+.canvas-shell {
+  position: relative;
+  background: #f8f0e6;
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 18px 40px var(--shadow);
+}
+
+canvas {
+  width: min(92vw, 620px);
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: 14px;
+  background: #efe3d6;
+  border: 2px solid rgba(28, 21, 18, 0.15);
+}
+
+.overlay {
+  position: absolute;
+  inset: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(28, 21, 18, 0.4);
+  border-radius: 14px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.overlay-card {
+  background: #f8f0e6;
+  padding: 18px 24px;
+  border-radius: 14px;
+  text-align: center;
+  box-shadow: 0 12px 30px var(--shadow);
+}
+
+.overlay-title {
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.overlay-body {
+  margin-top: 8px;
+  font-size: 1rem;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.dpad {
+  display: grid;
+  grid-template-columns: repeat(3, 48px);
+  grid-template-rows: repeat(3, 48px);
+  gap: 6px;
+}
+
+.pad {
+  border: none;
+  background: #f3c16c;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--ink);
+  box-shadow: 0 6px 12px var(--shadow);
+  cursor: pointer;
+}
+
+.pad:active {
+  transform: translateY(2px);
+}
+
+.pad.up {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.pad.left {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.pad.right {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.pad.down {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+.accuse {
+  flex: 1;
+  min-width: 180px;
+  height: 56px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #c84d3a, #e36f4e);
+  color: #fff5ea;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  box-shadow: 0 10px 20px var(--shadow);
+  cursor: pointer;
+}
+
+.accuse[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+@media (min-width: 860px) {
+  .game-wrap {
+    grid-template-columns: minmax(0, 1fr) 260px;
+    align-items: center;
+  }
+
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

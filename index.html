@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The Ladder: Follow the Money</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="hero">
+        <div class="hero-text">
+          <p class="kicker">Harringay Ladder File</p>
+          <h1>The Ladder: Follow the Money</h1>
+          <p class="subhead">
+            Collect clues, accuse the right fronts, and keep the heat down.
+          </p>
+        </div>
+        <div class="hud">
+          <div class="meter">
+            <div class="meter-fill" id="clueFill"></div>
+          </div>
+          <div class="hud-stats">
+            <span id="clueText">0/0</span>
+            <span id="exposedText">Exposed: 0/3</span>
+            <span id="heatText">Heat: x1.0</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="game-wrap">
+        <div class="canvas-shell">
+          <canvas id="game" width="1008" height="1296" aria-label="The Ladder game"></canvas>
+          <div class="overlay" id="overlay">
+            <div class="overlay-card">
+              <div class="overlay-title" id="overlayTitle">Round 1</div>
+              <div class="overlay-body" id="overlayBody">
+                Follow the money. Expose 3 bad shops.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="controls">
+          <div class="dpad">
+            <button class="pad up" data-dir="up">▲</button>
+            <button class="pad left" data-dir="left">◀</button>
+            <button class="pad right" data-dir="right">▶</button>
+            <button class="pad down" data-dir="down">▼</button>
+          </div>
+          <button class="accuse" id="accuseBtn">Accuse</button>
+        </div>
+      </main>
+    </div>
+
+    <script src="game.js"></script>
+  </body>
+</html>
