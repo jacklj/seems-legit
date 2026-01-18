@@ -9,6 +9,7 @@ const clueText = document.getElementById("clueText");
 const exposedText = document.getElementById("exposedText");
 const heatText = document.getElementById("heatText");
 const accuseBtn = document.getElementById("accuseBtn");
+const roundBadge = document.getElementById("roundBadge");
 const infoBtn = document.getElementById("infoBtn");
 const infoModal = document.getElementById("infoModal");
 const infoClose = document.getElementById("infoClose");
@@ -89,6 +90,7 @@ const sprites = {
   roadman: new Image(),
   barber: new Image(),
   tube: new Image(),
+  laundry: new Image(),
   loaded: false,
   readyCount: 0,
 };
@@ -97,11 +99,18 @@ sprites.journo.src = "sprites/journo.png";
 sprites.roadman.src = "sprites/roadman.png";
 sprites.barber.src = "sprites/barber.png";
 sprites.tube.src = "sprites/tube.png";
+sprites.laundry.src = "sprites/laundry.png";
 
-[sprites.journo, sprites.roadman, sprites.barber, sprites.tube].forEach((img) => {
+[
+  sprites.journo,
+  sprites.roadman,
+  sprites.barber,
+  sprites.tube,
+  sprites.laundry,
+].forEach((img) => {
   img.addEventListener("load", () => {
     sprites.readyCount += 1;
-    sprites.loaded = sprites.readyCount === 4;
+    sprites.loaded = sprites.readyCount === 5;
   });
   img.addEventListener("error", () => {
     sprites.loaded = false;
@@ -483,6 +492,7 @@ function updateHUD() {
   clueText.textContent = `${clueMeter}/${clueTarget}`;
   exposedText.textContent = `Exposed: ${exposedBadCount}/3`;
   heatText.textContent = `Heat: x${(1 + penaltyStacks * 0.2).toFixed(1)}`;
+  roundBadge.textContent = `Round ${roundIndex}`;
   accuseBtn.disabled =
     !getNearbyShop() || state !== STATE.PLAYING || clueMeter < clueTarget;
 }
@@ -550,7 +560,8 @@ function draw() {
     const center = tileCenter(shop);
     if (sprites.loaded) {
       const size = TILE_PX * 0.85;
-      drawSpriteAt(sprites.barber, center.x, center.y, size);
+      const shopSprite = shop.exposed ? sprites.laundry : sprites.barber;
+      drawSpriteAt(shopSprite, center.x, center.y, size);
       if (shop.exposed) {
         ctx.strokeStyle = COLORS.shopExposed;
         ctx.lineWidth = 3;
