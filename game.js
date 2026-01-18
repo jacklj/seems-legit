@@ -9,6 +9,9 @@ const clueText = document.getElementById("clueText");
 const exposedText = document.getElementById("exposedText");
 const heatText = document.getElementById("heatText");
 const accuseBtn = document.getElementById("accuseBtn");
+const infoBtn = document.getElementById("infoBtn");
+const infoModal = document.getElementById("infoModal");
+const infoClose = document.getElementById("infoClose");
 const overlay = document.getElementById("overlay");
 const overlayTitle = document.getElementById("overlayTitle");
 const overlayBody = document.getElementById("overlayBody");
@@ -563,6 +566,12 @@ function setNextDir(dir) {
 function bindControls() {
   window.addEventListener("keydown", (event) => {
     const key = event.key.toLowerCase();
+    if (key === "escape" && infoModal.classList.contains("show")) {
+      infoModal.classList.remove("show");
+      infoModal.setAttribute("aria-hidden", "true");
+      infoBtn.setAttribute("aria-expanded", "false");
+      return;
+    }
     if (
       key === " " ||
       key === "arrowup" ||
@@ -586,6 +595,26 @@ function bindControls() {
   });
 
   accuseBtn.addEventListener("click", attemptAccuse);
+
+  infoBtn.addEventListener("click", () => {
+    infoModal.classList.add("show");
+    infoModal.setAttribute("aria-hidden", "false");
+    infoBtn.setAttribute("aria-expanded", "true");
+  });
+
+  infoClose.addEventListener("click", () => {
+    infoModal.classList.remove("show");
+    infoModal.setAttribute("aria-hidden", "true");
+    infoBtn.setAttribute("aria-expanded", "false");
+  });
+
+  infoModal.addEventListener("click", (event) => {
+    if (event.target === infoModal) {
+      infoModal.classList.remove("show");
+      infoModal.setAttribute("aria-hidden", "true");
+      infoBtn.setAttribute("aria-expanded", "false");
+    }
+  });
 }
 
 parseBaseMap();
