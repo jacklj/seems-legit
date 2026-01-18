@@ -143,8 +143,15 @@ body {
   gap: 12px;
   justify-content: flex-start;
   font-size: 0.9rem;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   letter-spacing: 0.08em;
+}
+
+.round-and-expose {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: flex-start;
 }
 
 .game-wrap {
