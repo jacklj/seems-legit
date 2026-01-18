@@ -122,6 +122,8 @@ let exposedBadCount = 0;
 let penaltyStacks = 0;
 let freezeTimer = 0;
 let hitCooldown = 0;
+let messageTimer = 0;
+let messageText = "";
 
 const player = {
   x: 0,
@@ -413,6 +415,11 @@ function attemptAccuse() {
   if (state !== STATE.PLAYING) return;
   const nearShop = getNearbyShop();
   if (!nearShop) return;
+  if (clueMeter < clueTarget) {
+    messageText = "you dont have enough clues to accuse a shop";
+    messageTimer = 120;
+    return;
+  }
 
   clueMeter = 0;
   if (nearShop.isBad) {
@@ -450,11 +457,13 @@ function updateHUD() {
   clueText.textContent = `${clueMeter}/${clueTarget}`;
   exposedText.textContent = `Exposed: ${exposedBadCount}/3`;
   heatText.textContent = `Heat: x${(1 + penaltyStacks * 0.2).toFixed(1)}`;
-  accuseBtn.disabled = !getNearbyShop() || state !== STATE.PLAYING;
+  accuseBtn.disabled =
+    !getNearbyShop() || state !== STATE.PLAYING || clueMeter < clueTarget;
 }
 
 function updateTimers() {
   if (freezeTimer > 0) freezeTimer -= 1;
+  if (messageTimer > 0) messageTimer -= 1;
 }
 
 function update() {
@@ -551,6 +560,26 @@ function draw() {
       ctx.fill();
     }
   });
+
+  if (messageTimer > 0) {
+    const total = 120;
+    const elapsed = total - messageTimer;
+    const phase = elapsed / total;
+    const fadeIn = Math.min(1, elapsed / 12);
+    const fadeOut = Math.min(1, (total - elapsed) / 12);
+    const alpha = Math.min(fadeIn, fadeOut);
+    const rise = Math.sin(phase * Math.PI) * 10;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = "rgba(28, 21, 18, 0.7)";
+    ctx.fillRect(0, canvas.height / 2 - 34 + rise, canvas.width, 68);
+    ctx.fillStyle = "#d9332b";
+    ctx.font = "bold 24px 'Gill Sans', 'Trebuchet MS', sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(messageText, canvas.width / 2, canvas.height / 2 + rise);
+    ctx.restore();
+  }
 }
 
 function loop(timestamp) {
