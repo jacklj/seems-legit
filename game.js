@@ -252,12 +252,10 @@ function isWall(tileX, tileY) {
   return tiles[tileY][tileX] === 0;
 }
 
-function canMove(px, py, dir) {
-  const nextTile = {
-    x: Math.floor((px + dir.x * TILE_PX * 0.5) / TILE_PX),
-    y: Math.floor((py + dir.y * TILE_PX * 0.5) / TILE_PX),
-  };
-  return !isWall(nextTile.x, nextTile.y);
+function canMoveFromCenter(px, py, dir) {
+  const tileX = Math.floor(px / TILE_PX);
+  const tileY = Math.floor(py / TILE_PX);
+  return !isWall(tileX + dir.x, tileY + dir.y);
 }
 
 function nearCenter(px, py) {
@@ -277,24 +275,22 @@ function updatePlayer() {
 
   if (nearCenter(player.x, player.y)) {
     snapToCenter(player);
-    if (canMove(player.x, player.y, next)) {
+    if (canMoveFromCenter(player.x, player.y, next)) {
       player.dir = player.nextDir;
-    } else if (!canMove(player.x, player.y, dir)) {
+    } else if (!canMoveFromCenter(player.x, player.y, dir)) {
       return;
     }
   }
 
   const move = DIRS[player.dir];
-  if (canMove(player.x, player.y, move)) {
-    player.x += move.x * player.speed;
-    player.y += move.y * player.speed;
-  }
+  player.x += move.x * player.speed;
+  player.y += move.y * player.speed;
 }
 
 function validDirs(entity) {
   return Object.entries(DIRS).filter(([name, dir]) => {
     if (name === reverseDir(entity.dir)) return false;
-    return canMove(entity.x, entity.y, dir);
+    return canMoveFromCenter(entity.x, entity.y, dir);
   });
 }
 
@@ -344,14 +340,13 @@ function updateEnemies() {
     if (nearCenter(enemy.x, enemy.y)) {
       snapToCenter(enemy);
       enemy.dir = chooseEnemyDir(enemy);
+      if (!canMoveFromCenter(enemy.x, enemy.y, DIRS[enemy.dir])) {
+        enemy.dir = reverseDir(enemy.dir);
+      }
     }
     const dir = DIRS[enemy.dir];
-    if (canMove(enemy.x, enemy.y, dir)) {
-      enemy.x += dir.x * enemy.speed * speedMult;
-      enemy.y += dir.y * enemy.speed * speedMult;
-    } else {
-      enemy.dir = reverseDir(enemy.dir);
-    }
+    enemy.x += dir.x * enemy.speed * speedMult;
+    enemy.y += dir.y * enemy.speed * speedMult;
   });
 }
 
