@@ -170,7 +170,7 @@ function startRound() {
   hitCooldown = 0;
 
   const numEnemies = clamp(2 + Math.floor((roundIndex - 1) / 2), 2, 5);
-  const numShops = clamp(5 + roundIndex, 5, 12);
+  const numShops = shopSlots.length;
   const badShopCount = 3;
   clueTarget = 20 + roundIndex * 5;
 
