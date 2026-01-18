@@ -139,21 +139,17 @@ const STEP = 1000 / 60;
 
 function parseBaseMap() {
   tiles = [];
-  shopSlots = [];
   enemySpawns = [];
   for (let y = 0; y < MAP_HEIGHT; y += 1) {
     const row = [];
     for (let x = 0; x < MAP_WIDTH; x += 1) {
       const char = BASE_MAP[y][x];
-      if (char === "#") {
+      if (char === "#" || char === "S") {
         row.push(0);
       } else if (char === "G") {
         row.push(2);
       } else {
         row.push(1);
-      }
-      if (char === "S") {
-        shopSlots.push({ x, y });
       }
       if (char === "P") {
         playerSpawn = { x, y };
@@ -164,6 +160,24 @@ function parseBaseMap() {
     }
     tiles.push(row);
   }
+}
+
+function buildShopSlots() {
+  const slots = [];
+  for (let y = 1; y < MAP_HEIGHT - 1; y += 1) {
+    for (let x = 1; x < MAP_WIDTH - 1; x += 1) {
+      if (tiles[y][x] !== 0) continue;
+      const hasRoadNeighbor =
+        tiles[y - 1][x] === 1 ||
+        tiles[y + 1][x] === 1 ||
+        tiles[y][x - 1] === 1 ||
+        tiles[y][x + 1] === 1;
+      if (hasRoadNeighbor) {
+        slots.push({ x, y });
+      }
+    }
+  }
+  shopSlots = slots;
 }
 
 function shuffle(arr) {
@@ -198,7 +212,8 @@ function startRound() {
   hitCooldown = 0;
 
   const numEnemies = clamp(2 + Math.floor((roundIndex - 1) / 2), 2, 5);
-  const numShops = shopSlots.length;
+  buildShopSlots();
+  const numShops = Math.min(shopSlots.length, 4 + (roundIndex - 1));
   const badShopCount = 3;
   clueTarget = 20 + roundIndex * 5;
 
