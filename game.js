@@ -534,7 +534,7 @@ function draw() {
       } else if (tiles[y][x] === 3) {
         if (sprites.loaded) {
           const center = tileCenter({ x, y });
-          drawSpriteAt(sprites.tube, center.x, center.y, TILE_PX * 0.9);
+          drawSpriteAt(sprites.tube, center.x, center.y, TILE_PX * 1.3);
         } else {
           drawTile(x, y, COLORS.tube);
         }
@@ -559,7 +559,7 @@ function draw() {
   shops.forEach((shop) => {
     const center = tileCenter(shop);
     if (sprites.loaded) {
-      const size = TILE_PX * 0.85;
+      const size = TILE_PX * 1.3;
       const shopSprite = shop.exposed ? sprites.laundry : sprites.barber;
       drawSpriteAt(shopSprite, center.x, center.y, size);
       if (shop.exposed) {
