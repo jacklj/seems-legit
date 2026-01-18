@@ -373,8 +373,16 @@ function updateEnemies() {
       if (!canMoveFromCenter(enemy.x, enemy.y, DIRS[enemy.dir])) return;
     }
     const dir = DIRS[enemy.dir];
-    enemy.x += dir.x * enemy.speed * speedMult;
-    enemy.y += dir.y * enemy.speed * speedMult;
+    const nextX = enemy.x + dir.x * enemy.speed * speedMult;
+    const nextY = enemy.y + dir.y * enemy.speed * speedMult;
+    const nextTileX = Math.floor(nextX / TILE_PX);
+    const nextTileY = Math.floor(nextY / TILE_PX);
+    if (isWall(nextTileX, nextTileY)) {
+      snapToCenter(enemy);
+      return;
+    }
+    enemy.x = nextX;
+    enemy.y = nextY;
   });
 }
 
