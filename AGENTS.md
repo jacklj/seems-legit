@@ -30,7 +30,7 @@
 
 ### UI, Controls, Rendering
 - HUD: clue meter, exposed count, heat; round intro overlay.
-- Controls: arrows/WASD + on-screen D-pad; `Space`/button to accuse.
+- Controls: arrows/WASD + `Space` + button to accuse. On mobile, click quaderants of the game to go up down left right.
 - Draw order: walls → clues → shops → player → enemies → HUD; `imageSmoothingEnabled = false`.
 
 ### Implementation Checklist

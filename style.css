@@ -259,69 +259,6 @@ canvas {
   flex-wrap: wrap;
 }
 
-.dpad {
-  display: grid;
-  grid-template-columns: repeat(3, 48px);
-  grid-template-rows: repeat(3, 48px);
-  gap: 6px;
-}
-
-.pad {
-  border: none;
-  background: #f3c16c;
-  border-radius: 12px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--ink);
-  box-shadow: 0 6px 12px var(--shadow);
-  cursor: pointer;
-}
-
-.pad:active {
-  transform: translateY(2px);
-}
-
-.pad.up {
-  grid-column: 2;
-  grid-row: 1;
-}
-
-.pad.left {
-  grid-column: 1;
-  grid-row: 2;
-}
-
-.pad.right {
-  grid-column: 3;
-  grid-row: 2;
-}
-
-.pad.down {
-  grid-column: 2;
-  grid-row: 3;
-}
-
-.accuse {
-  flex: 1;
-  min-width: 180px;
-  height: 56px;
-  border: none;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #c84d3a, #e36f4e);
-  color: #fff5ea;
-  font-size: 1.1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  box-shadow: 0 10px 20px var(--shadow);
-  cursor: pointer;
-}
-
-.accuse[disabled] {
-  opacity: 0.5;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
 .modal {
   position: fixed;
   inset: 0;

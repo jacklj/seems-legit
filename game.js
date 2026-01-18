@@ -8,7 +8,6 @@ const clueFill = document.getElementById("clueFill");
 const clueText = document.getElementById("clueText");
 const exposedText = document.getElementById("exposedText");
 const heatText = document.getElementById("heatText");
-const accuseBtn = document.getElementById("accuseBtn");
 const accuseFloat = document.getElementById("accuseFloat");
 const roundBadge = document.getElementById("roundBadge");
 const infoBtn = document.getElementById("infoBtn");
@@ -510,8 +509,6 @@ function updateHUD() {
   heatText.textContent = `Heat: x${(1 + penaltyStacks * 0.2).toFixed(1)}`;
   roundBadge.textContent = `Round ${roundIndex}`;
   const nearShop = getNearbyShop();
-  accuseBtn.disabled =
-    !nearShop || state !== STATE.PLAYING || clueMeter < clueTarget;
   const dist = nearestShopDistance();
   const baseOpacity = 0.2;
   let opacity = baseOpacity;
@@ -700,13 +697,6 @@ function bindControls() {
     if (key === " ") attemptAccuse();
   });
 
-  document.querySelectorAll(".pad").forEach((btn) => {
-    btn.addEventListener("pointerdown", () => {
-      setNextDir(btn.dataset.dir);
-    });
-  });
-
-  accuseBtn.addEventListener("click", attemptAccuse);
   accuseFloat.addEventListener("click", attemptAccuse);
 
   infoBtn.addEventListener("click", () => {
