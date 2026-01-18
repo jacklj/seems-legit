@@ -446,6 +446,22 @@ function getNearbyShop() {
   });
 }
 
+function nearestShopDistance() {
+  const playerTile = {
+    x: Math.floor(player.x / TILE_PX),
+    y: Math.floor(player.y / TILE_PX),
+  };
+  let best = Infinity;
+  shops.forEach((shop) => {
+    if (shop.exposed) return;
+    const dx = shop.x - playerTile.x;
+    const dy = shop.y - playerTile.y;
+    const dist = Math.hypot(dx, dy);
+    if (dist < best) best = dist;
+  });
+  return best;
+}
+
 function attemptAccuse() {
   if (state !== STATE.PLAYING) return;
   const nearShop = getNearbyShop();
@@ -496,7 +512,14 @@ function updateHUD() {
   const nearShop = getNearbyShop();
   accuseBtn.disabled =
     !nearShop || state !== STATE.PLAYING || clueMeter < clueTarget;
-  accuseFloat.style.display = nearShop && state === STATE.PLAYING ? "block" : "none";
+  const dist = nearestShopDistance();
+  const baseOpacity = 0.2;
+  let opacity = baseOpacity;
+  if (state === STATE.PLAYING && dist <= 2) {
+    opacity = clamp(baseOpacity + (1 - (dist - 1)) * (1 - baseOpacity), 0, 1);
+  }
+  accuseFloat.style.display = "block";
+  accuseFloat.style.opacity = opacity.toFixed(2);
   accuseFloat.disabled = !nearShop || clueMeter < clueTarget;
 }
 
