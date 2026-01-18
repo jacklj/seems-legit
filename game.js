@@ -531,13 +531,18 @@ function draw() {
         drawTile(x, y, COLORS.wall);
       } else if (tiles[y][x] === 2) {
         drawTile(x, y, COLORS.park);
-      } else if (tiles[y][x] === 3) {
-        if (sprites.loaded) {
-          const center = tileCenter({ x, y });
-          drawSpriteAt(sprites.tube, center.x, center.y, TILE_PX * 1.3);
-        } else {
-          drawTile(x, y, COLORS.tube);
-        }
+      }
+    }
+  }
+
+  for (let y = 0; y < MAP_HEIGHT; y += 1) {
+    for (let x = 0; x < MAP_WIDTH; x += 1) {
+      if (tiles[y][x] !== 3) continue;
+      if (sprites.loaded) {
+        const center = tileCenter({ x, y });
+        drawSpriteAt(sprites.tube, center.x, center.y, TILE_PX * 1.3);
+      } else {
+        drawTile(x, y, COLORS.tube);
       }
     }
   }
