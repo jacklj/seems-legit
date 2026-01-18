@@ -138,6 +138,9 @@ let freezeTimer = 0;
 let hitCooldown = 0;
 let messageTimer = 0;
 let messageText = "";
+let tapDir = null;
+let tapTimer = 0;
+let tapPos = { x: 0, y: 0 };
 
 const player = {
   x: 0,
@@ -523,6 +526,7 @@ function updateHUD() {
 function updateTimers() {
   if (freezeTimer > 0) freezeTimer -= 1;
   if (messageTimer > 0) messageTimer -= 1;
+  if (tapTimer > 0) tapTimer -= 1;
 }
 
 function update() {
@@ -652,6 +656,27 @@ function draw() {
     ctx.fillText(messageText, canvas.width / 2, canvas.height / 2 + rise);
     ctx.restore();
   }
+
+  if (tapTimer > 0 && tapDir) {
+    const alpha = Math.min(1, tapTimer / 12);
+    const centerX = tapPos.x;
+    const centerY = tapPos.y;
+    const size = TILE_PX * 4.4;
+    ctx.save();
+    ctx.globalAlpha = alpha * 0.5;
+    ctx.fillStyle = "#1c1512";
+    ctx.translate(centerX, centerY);
+    if (tapDir === "up") ctx.rotate(-Math.PI / 2);
+    if (tapDir === "down") ctx.rotate(Math.PI / 2);
+    if (tapDir === "left") ctx.rotate(Math.PI);
+    ctx.beginPath();
+    ctx.moveTo(size * 0.5, 0);
+    ctx.lineTo(-size * 0.3, -size * 0.35);
+    ctx.lineTo(-size * 0.3, size * 0.35);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
 }
 
 function loop(timestamp) {
@@ -698,6 +723,43 @@ function bindControls() {
   });
 
   accuseFloat.addEventListener("click", attemptAccuse);
+
+  canvas.addEventListener("pointerdown", (event) => {
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const w = rect.width;
+    const h = rect.height;
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    event.preventDefault();
+
+    let chosen = null;
+    if (y < h * 0.35) {
+      chosen = "up";
+    } else if (y > h * 0.65) {
+      chosen = "down";
+    } else if (x < w * 0.35) {
+      chosen = "left";
+    } else if (x > w * 0.65) {
+      chosen = "right";
+    }
+    if (chosen) {
+      setNextDir(chosen);
+      tapDir = chosen;
+      tapTimer = 22;
+      const pad = TILE_PX * 0.9;
+      if (chosen === "up") {
+        tapPos = { x: (w / 2) * scaleX, y: pad * scaleY };
+      } else if (chosen === "down") {
+        tapPos = { x: (w / 2) * scaleX, y: (h - pad) * scaleY };
+      } else if (chosen === "left") {
+        tapPos = { x: pad * scaleX, y: (h / 2) * scaleY };
+      } else if (chosen === "right") {
+        tapPos = { x: (w - pad) * scaleX, y: (h / 2) * scaleY };
+      }
+    }
+  });
 
   infoBtn.addEventListener("click", () => {
     infoModal.classList.add("show");

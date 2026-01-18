@@ -175,6 +175,7 @@ canvas {
   border-radius: 14px;
   background: #efe3d6;
   border: 2px solid rgba(28, 21, 18, 0.15);
+  touch-action: none;
 }
 
 .overlay {
