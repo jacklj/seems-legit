@@ -190,6 +190,30 @@ canvas {
   transition: opacity 0.3s ease;
 }
 
+.accuse-float {
+  border: none;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(200, 77, 58, 0.8);
+  color: #fff5ea;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  cursor: pointer;
+  box-shadow: 0 10px 18px rgba(28, 21, 18, 0.25);
+  display: none;
+}
+
+.accuse-float.hud-accuse {
+  align-self: center;
+}
+
+.accuse-float[disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
 .overlay.show {
   opacity: 1;
   pointer-events: auto;

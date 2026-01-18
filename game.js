@@ -9,6 +9,7 @@ const clueText = document.getElementById("clueText");
 const exposedText = document.getElementById("exposedText");
 const heatText = document.getElementById("heatText");
 const accuseBtn = document.getElementById("accuseBtn");
+const accuseFloat = document.getElementById("accuseFloat");
 const roundBadge = document.getElementById("roundBadge");
 const infoBtn = document.getElementById("infoBtn");
 const infoModal = document.getElementById("infoModal");
@@ -492,8 +493,11 @@ function updateHUD() {
   exposedText.textContent = `Exposed: ${exposedBadCount}/3`;
   heatText.textContent = `Heat: x${(1 + penaltyStacks * 0.2).toFixed(1)}`;
   roundBadge.textContent = `Round ${roundIndex}`;
+  const nearShop = getNearbyShop();
   accuseBtn.disabled =
-    !getNearbyShop() || state !== STATE.PLAYING || clueMeter < clueTarget;
+    !nearShop || state !== STATE.PLAYING || clueMeter < clueTarget;
+  accuseFloat.style.display = nearShop && state === STATE.PLAYING ? "block" : "none";
+  accuseFloat.disabled = !nearShop || clueMeter < clueTarget;
 }
 
 function updateTimers() {
@@ -680,6 +684,7 @@ function bindControls() {
   });
 
   accuseBtn.addEventListener("click", attemptAccuse);
+  accuseFloat.addEventListener("click", attemptAccuse);
 
   infoBtn.addEventListener("click", () => {
     infoModal.classList.add("show");
