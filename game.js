@@ -30,7 +30,7 @@ const DIRS = {
 const BASE_MAP = [
   "#####################",
   "#...................#",
-  "#.####.GGG.########.#",
+  "#.####.GGT.########.#",
   "#.####.GGG.########.#",
   "#......GGG..........#",
   "#.####.GGG.########.#",
@@ -75,6 +75,7 @@ const COLORS = {
   wall: "#2d2623",
   path: "#f0e4d4",
   park: "#7bbf78",
+  tube: "#d9332b",
   clue: "#f3c16c",
   shop: "#6fbfa7",
   shopBad: "#c84d3a",
@@ -87,6 +88,7 @@ const sprites = {
   journo: new Image(),
   roadman: new Image(),
   barber: new Image(),
+  tube: new Image(),
   loaded: false,
   readyCount: 0,
 };
@@ -94,11 +96,12 @@ const sprites = {
 sprites.journo.src = "sprites/journo.png";
 sprites.roadman.src = "sprites/roadman.png";
 sprites.barber.src = "sprites/barber.png";
+sprites.tube.src = "sprites/tube.png";
 
-[sprites.journo, sprites.roadman, sprites.barber].forEach((img) => {
+[sprites.journo, sprites.roadman, sprites.barber, sprites.tube].forEach((img) => {
   img.addEventListener("load", () => {
     sprites.readyCount += 1;
-    sprites.loaded = sprites.readyCount === 3;
+    sprites.loaded = sprites.readyCount === 4;
   });
   img.addEventListener("error", () => {
     sprites.loaded = false;
@@ -149,6 +152,8 @@ function parseBaseMap() {
         row.push(0);
       } else if (char === "G") {
         row.push(2);
+      } else if (char === "T") {
+        row.push(3);
       } else {
         row.push(1);
       }
@@ -281,7 +286,7 @@ function hideOverlay() {
 
 function enterRoundIntro() {
   state = STATE.ROUND_INTRO;
-  showOverlay(`Round ${roundIndex}`, "Follow the money. Expose 3 bad shops.");
+  showOverlay(`Round ${roundIndex}`, "Follow the clues. Expose 3 money laundering fronts.");
   setTimeout(() => {
     hideOverlay();
     state = STATE.PLAYING;
@@ -290,7 +295,7 @@ function enterRoundIntro() {
 
 function enterRoundWin() {
   state = STATE.ROUND_WIN;
-  showOverlay("Fronts Exposed", "3 bad shops down. Next round incoming.");
+  showOverlay("Fronts Exposed", "3 money laundering fronts down. Next round incoming.");
   setTimeout(() => {
     hideOverlay();
     roundIndex += 1;
@@ -516,6 +521,13 @@ function draw() {
         drawTile(x, y, COLORS.wall);
       } else if (tiles[y][x] === 2) {
         drawTile(x, y, COLORS.park);
+      } else if (tiles[y][x] === 3) {
+        if (sprites.loaded) {
+          const center = tileCenter({ x, y });
+          drawSpriteAt(sprites.tube, center.x, center.y, TILE_PX * 0.9);
+        } else {
+          drawTile(x, y, COLORS.tube);
+        }
       }
     }
   }
