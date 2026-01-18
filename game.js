@@ -13,6 +13,7 @@ const roundBadge = document.getElementById("roundBadge");
 const infoBtn = document.getElementById("infoBtn");
 const infoModal = document.getElementById("infoModal");
 const infoClose = document.getElementById("infoClose");
+const startBtn = document.getElementById("startBtn");
 const overlay = document.getElementById("overlay");
 const overlayTitle = document.getElementById("overlayTitle");
 const overlayBody = document.getElementById("overlayBody");
@@ -296,15 +297,13 @@ function hideOverlay() {
 function enterRoundIntro() {
   state = STATE.ROUND_INTRO;
   showOverlay(`Round ${roundIndex}`, "Follow the clues. Expose 3 money laundering fronts.");
-  setTimeout(() => {
-    hideOverlay();
-    state = STATE.PLAYING;
-  }, 1600);
+  startBtn.hidden = false;
 }
 
 function enterRoundWin() {
   state = STATE.ROUND_WIN;
   showOverlay("Fronts Exposed", "3 money laundering fronts down. Next round incoming.");
+  startBtn.hidden = true;
   setTimeout(() => {
     hideOverlay();
     roundIndex += 1;
@@ -700,6 +699,12 @@ function bindControls() {
       infoModal.setAttribute("aria-hidden", "true");
       infoBtn.setAttribute("aria-expanded", "false");
     }
+  });
+
+  startBtn.addEventListener("click", () => {
+    if (state !== STATE.ROUND_INTRO) return;
+    hideOverlay();
+    state = STATE.PLAYING;
   });
 }
 
