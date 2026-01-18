@@ -26,31 +26,31 @@ const DIRS = {
 
 const BASE_MAP = [
   "#####################",
-  "#P....#.....#....S..#",
-  "#.##.#.###.#.##.#.#.#",
-  "#....#.....#....#...#",
-  "####.#####.#####.####",
-  "#S..#...#...#....#..#",
-  "#.##.#.#.#.#.##.##..#",
-  "#....#.#...#....#...#",
-  "####.#.#####.####.###",
-  "#....#...E.#....#...#",
-  "#.######.#######.#.##",
-  "#....#....#....#....#",
-  "###.#.##.#.#.##.#.###",
-  "#S..#....#.#....#..S#",
-  "#.##.####.#.####.##.#",
-  "#....#..#...#..#....#",
-  "####.#.#####.####.###",
-  "#....#...S.#....#...#",
-  "#.##.###.###.###.##.#",
-  "#...#....#....#.....#",
-  "###.#.##.#.##.#.##.##",
-  "#...#....#....#....E#",
-  "#.###.######.###.####",
-  "#....#....#....#....#",
-  "#.##.#.##.#.##.#.##.#",
-  "#S..#....#....#....S#",
+  "#GGGGGGG##..#########",
+  "#GGGGGGG##..#########",
+  "#GGGGGGG##.........##",
+  "#GGGGGGG##...GGGGG.##",
+  "#.########..#.GGGG.##",
+  "#.########P.##.GGG.##",
+  "#..S........###.GG.##",
+  "#.########..####.GE##",
+  "#.########..######S##",
+  "#......S....######.##",
+  "#.########..######E##",
+  "#..S........######.##",
+  "#........S..######.##",
+  "#.########..######.##",
+  "#.########..######E##",
+  "#....S......######.##",
+  "#.########..######.##",
+  "#.########..######.##",
+  "#.S.........######.##",
+  "#.########..######.##",
+  "#.########..######E##",
+  "#......S....######.##",
+  "#.########..######.##",
+  "#.########..######.##",
+  "#...S.......######.##",
   "#####################",
 ];
 
@@ -70,6 +70,7 @@ const STATE = {
 const COLORS = {
   wall: "#2d2623",
   path: "#f0e4d4",
+  park: "#7bbf78",
   clue: "#f3c16c",
   shop: "#6fbfa7",
   shopBad: "#c84d3a",
@@ -117,6 +118,8 @@ function parseBaseMap() {
       const char = BASE_MAP[y][x];
       if (char === "#") {
         row.push(0);
+      } else if (char === "G") {
+        row.push(2);
       } else {
         row.push(1);
       }
@@ -165,7 +168,7 @@ function startRound() {
   freezeTimer = 0;
   hitCooldown = 0;
 
-  const numEnemies = clamp(1 + Math.floor(roundIndex / 2), 1, 5);
+  const numEnemies = clamp(2 + Math.floor((roundIndex - 1) / 2), 2, 5);
   const numShops = clamp(5 + roundIndex, 5, 12);
   const badShopCount = 3;
   clueTarget = 20 + roundIndex * 5;
@@ -186,7 +189,7 @@ function startRound() {
   clues.clear();
   for (let y = 0; y < MAP_HEIGHT; y += 1) {
     for (let x = 0; x < MAP_WIDTH; x += 1) {
-      if (tiles[y][x] === 0) continue;
+      if (tiles[y][x] !== 1) continue;
       const isShop = shops.some((shop) => shop.x === x && shop.y === y);
       if (isShop) continue;
       if (x === playerSpawn.x && y === playerSpawn.y) continue;
@@ -249,7 +252,7 @@ function isWall(tileX, tileY) {
   if (tileX < 0 || tileY < 0 || tileX >= MAP_WIDTH || tileY >= MAP_HEIGHT) {
     return true;
   }
-  return tiles[tileY][tileX] === 0;
+  return tiles[tileY][tileX] !== 1;
 }
 
 function canMoveFromCenter(px, py, dir) {
@@ -261,7 +264,7 @@ function canMoveFromCenter(px, py, dir) {
 function nearCenter(px, py) {
   const cx = (Math.floor(px / TILE_PX) + 0.5) * TILE_PX;
   const cy = (Math.floor(py / TILE_PX) + 0.5) * TILE_PX;
-  return Math.abs(px - cx) < 2 && Math.abs(py - cy) < 2;
+  return Math.abs(px - cx) < 0.5 && Math.abs(py - cy) < 0.5;
 }
 
 function snapToCenter(entity) {
@@ -287,11 +290,10 @@ function updatePlayer() {
   player.y += move.y * player.speed;
 }
 
-function validDirs(entity) {
-  return Object.entries(DIRS).filter(([name, dir]) => {
-    if (name === reverseDir(entity.dir)) return false;
-    return canMoveFromCenter(entity.x, entity.y, dir);
-  });
+function possibleDirs(entity) {
+  return Object.entries(DIRS).filter(([, dir]) =>
+    canMoveFromCenter(entity.x, entity.y, dir)
+  );
 }
 
 function reverseDir(dir) {
@@ -302,22 +304,21 @@ function reverseDir(dir) {
 }
 
 function chooseEnemyDir(enemy) {
-  const options = validDirs(enemy);
-  if (!options.length) {
-    return reverseDir(enemy.dir);
-  }
-  if (options.length === 1) {
-    return options[0][0];
-  }
+  const allOptions = possibleDirs(enemy);
+  if (!allOptions.length) return reverseDir(enemy.dir);
+  const reverse = reverseDir(enemy.dir);
+  const options = allOptions.filter(([name]) => name !== reverse);
+  const picks = options.length ? options : allOptions;
+  if (picks.length === 1) return picks[0][0];
 
   if (Math.random() < 0.5) {
     const playerTile = {
       x: Math.floor(player.x / TILE_PX),
       y: Math.floor(player.y / TILE_PX),
     };
-    let best = options[0];
+    let best = picks[0];
     let bestDist = Infinity;
-    options.forEach(([name, dir]) => {
+    picks.forEach(([name, dir]) => {
       const tx = Math.floor((enemy.x + dir.x * TILE_PX) / TILE_PX);
       const ty = Math.floor((enemy.y + dir.y * TILE_PX) / TILE_PX);
       const dist = Math.abs(playerTile.x - tx) + Math.abs(playerTile.y - ty);
@@ -329,7 +330,7 @@ function chooseEnemyDir(enemy) {
     return best[0];
   }
 
-  const randomPick = options[Math.floor(Math.random() * options.length)];
+  const randomPick = picks[Math.floor(Math.random() * picks.length)];
   return randomPick[0];
 }
 
@@ -340,9 +341,7 @@ function updateEnemies() {
     if (nearCenter(enemy.x, enemy.y)) {
       snapToCenter(enemy);
       enemy.dir = chooseEnemyDir(enemy);
-      if (!canMoveFromCenter(enemy.x, enemy.y, DIRS[enemy.dir])) {
-        enemy.dir = reverseDir(enemy.dir);
-      }
+      if (!canMoveFromCenter(enemy.x, enemy.y, DIRS[enemy.dir])) return;
     }
     const dir = DIRS[enemy.dir];
     enemy.x += dir.x * enemy.speed * speedMult;
@@ -360,18 +359,22 @@ function updateClues() {
   }
 }
 
-function attemptAccuse() {
-  if (clueMeter < clueTarget || state !== STATE.PLAYING) return;
+function getNearbyShop() {
   const playerTile = {
     x: Math.floor(player.x / TILE_PX),
     y: Math.floor(player.y / TILE_PX),
   };
-  const nearShop = shops.find((shop) => {
+  return shops.find((shop) => {
     if (shop.exposed) return false;
     const dx = shop.x - playerTile.x;
     const dy = shop.y - playerTile.y;
     return Math.hypot(dx, dy) <= 1;
   });
+}
+
+function attemptAccuse() {
+  if (state !== STATE.PLAYING) return;
+  const nearShop = getNearbyShop();
   if (!nearShop) return;
 
   clueMeter = 0;
@@ -410,7 +413,7 @@ function updateHUD() {
   clueText.textContent = `${clueMeter}/${clueTarget}`;
   exposedText.textContent = `Exposed: ${exposedBadCount}/3`;
   heatText.textContent = `Heat: x${(1 + penaltyStacks * 0.2).toFixed(1)}`;
-  accuseBtn.disabled = clueMeter < clueTarget || state !== STATE.PLAYING;
+  accuseBtn.disabled = !getNearbyShop() || state !== STATE.PLAYING;
 }
 
 function updateTimers() {
@@ -440,6 +443,8 @@ function draw() {
     for (let x = 0; x < MAP_WIDTH; x += 1) {
       if (tiles[y][x] === 0) {
         drawTile(x, y, COLORS.wall);
+      } else if (tiles[y][x] === 2) {
+        drawTile(x, y, COLORS.park);
       }
     }
   }
