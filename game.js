@@ -30,30 +30,30 @@ const DIRS = {
 const BASE_MAP = [
   "#####################",
   "#...................#",
-  "#.####.GGG.S####S##.#",
-  "#.##S#.GGG.########.#",
+  "#.####.GGG.########.#",
+  "#.####.GGG.########.#",
   "#......GGG..........#",
   "#.####.GGG.########.#",
   "#.####.GGG..#######.#",
-  "#.E....GGG...######.#",
+  "#......GGG...######.#",
   "#.####.GGG.G..#####.#",
   "#.####.GGG.GG..####.#",
   "#......GGGEGGG..###.#",
-  "#.###S.GGG.GGGG..##.#",
+  "#.####.GGG.GGGG..##.#",
   "#..........GGGGG..#.#",
   "#.########.GGGGGG...#",
   "#.########.GGGGGGGG.#",
   "#.########..........#",
-  "#..........#S######.#",
-  "#.##S#S###.########.#",
-  "#.#######S....E.....#",
+  "#..........########.#",
   "#.########.########.#",
-  "#.########.S#######.#",
+  "#.########..........#",
+  "#.########.########.#",
+  "#.########.########.#",
   "#.########..........#",
   "#..........########.#",
-  "#.########.####S###.#",
+  "#.########.########.#",
   "#.########..........#",
-  "#....E.....###########",
+  "#..........###########",
   "#####################",
 ];
 
@@ -113,6 +113,7 @@ let playerSpawn = { x: 1, y: 1 };
 let enemySpawns = [];
 let shops = [];
 let shopBlocks = new Set();
+let roadTiles = [];
 let clues = new Set();
 let enemies = [];
 
@@ -144,7 +145,7 @@ function parseBaseMap() {
     const row = [];
     for (let x = 0; x < MAP_WIDTH; x += 1) {
       const char = BASE_MAP[y][x];
-      if (char === "#" || char === "S") {
+      if (char === "#") {
         row.push(0);
       } else if (char === "G") {
         row.push(2);
@@ -153,9 +154,6 @@ function parseBaseMap() {
       }
       if (char === "P") {
         playerSpawn = { x, y };
-      }
-      if (char === "E") {
-        enemySpawns.push({ x, y });
       }
     }
     tiles.push(row);
@@ -211,7 +209,7 @@ function startRound() {
   freezeTimer = 0;
   hitCooldown = 0;
 
-  const numEnemies = clamp(2 + Math.floor((roundIndex - 1) / 2), 2, 5);
+  const numEnemies = clamp(1 + roundIndex, 2, 5);
   buildShopSlots();
   const numShops = Math.min(shopSlots.length, 4 + (roundIndex - 1));
   const badShopCount = 3;
@@ -231,10 +229,12 @@ function startRound() {
       shop.isBad = true;
     });
 
+  roadTiles = [];
   clues.clear();
   for (let y = 0; y < MAP_HEIGHT; y += 1) {
     for (let x = 0; x < MAP_WIDTH; x += 1) {
       if (tiles[y][x] !== 1) continue;
+      roadTiles.push({ x, y });
       const isShop = shops.some((shop) => shop.x === x && shop.y === y);
       if (isShop) continue;
       if (x === playerSpawn.x && y === playerSpawn.y) continue;
@@ -249,10 +249,16 @@ function startRound() {
   player.dir = "left";
   player.nextDir = "left";
 
-  const enemyChoices = shuffle(enemySpawns);
+  const enemyCandidates = shuffle(
+    roadTiles.filter(
+      (tile) =>
+        !(tile.x === playerSpawn.x && tile.y === playerSpawn.y) &&
+        !shopBlocks.has(keyFor(tile.x, tile.y))
+    )
+  );
   enemies = [];
   for (let i = 0; i < numEnemies; i += 1) {
-    const spawn = enemyChoices[i % enemyChoices.length] || playerSpawn;
+    const spawn = enemyCandidates[i % enemyCandidates.length] || playerSpawn;
     const center = tileCenter(spawn);
     enemies.push({
       x: center.x,
