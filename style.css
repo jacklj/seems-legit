@@ -123,7 +123,7 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 
 .meter {
@@ -132,7 +132,7 @@ body {
   border-radius: 999px;
   overflow: hidden;
   border: 1px solid rgba(28, 21, 18, 0.2);
-  min-width: 120px;
+  min-width: 150px;
   margin-left: 0;
 }
 
@@ -146,7 +146,7 @@ body {
 .hud-stats {
   display: flex;
   gap: 12px;
-  justify-content: flex-end;
+  justify-content: flex-start;
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
