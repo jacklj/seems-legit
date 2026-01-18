@@ -44,6 +44,7 @@ body {
   border-radius: 18px;
   padding: 18px 22px;
   box-shadow: 0 12px 30px var(--shadow);
+  position: relative;
 }
 
 .hero-text h1 {
@@ -78,13 +79,6 @@ body {
   color: #3a2b25;
 }
 
-.hero-meta {
-  margin-top: 12px;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-}
-
 .info-btn {
   width: 32px;
   height: 32px;
@@ -99,6 +93,12 @@ body {
 
 .info-btn:active {
   transform: translateY(1px);
+}
+
+.info-btn.floating {
+  position: absolute;
+  top: 16px;
+  right: 16px;
 }
 
 .round-badge {
@@ -119,12 +119,21 @@ body {
   text-align: right;
 }
 
+.hud-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
 .meter {
   background: #efe3d6;
   height: 12px;
   border-radius: 999px;
   overflow: hidden;
   border: 1px solid rgba(28, 21, 18, 0.2);
+  min-width: 120px;
+  margin-left: 0;
 }
 
 .meter-fill {
