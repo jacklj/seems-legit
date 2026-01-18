@@ -87,6 +87,7 @@ let shopSlots = [];
 let playerSpawn = { x: 1, y: 1 };
 let enemySpawns = [];
 let shops = [];
+let shopBlocks = new Set();
 let clues = new Set();
 let enemies = [];
 
@@ -181,6 +182,7 @@ function startRound() {
     isBad: false,
     exposed: false,
   }));
+  shopBlocks = new Set(shops.map((shop) => keyFor(shop.x, shop.y)));
   shuffle(shops)
     .slice(0, badShopCount)
     .forEach((shop) => {
@@ -253,7 +255,8 @@ function isWall(tileX, tileY) {
   if (tileX < 0 || tileY < 0 || tileX >= MAP_WIDTH || tileY >= MAP_HEIGHT) {
     return true;
   }
-  return tiles[tileY][tileX] !== 1;
+  if (tiles[tileY][tileX] !== 1) return true;
+  return shopBlocks.has(keyFor(tileX, tileY));
 }
 
 function canMoveFromCenter(px, py, dir) {
