@@ -21,6 +21,7 @@ body {
     linear-gradient(160deg, #f0c49a 0%, #f7eadb 45%, #f4d1ae 100%);
   color: var(--ink);
   min-height: 100vh;
+  overflow: hidden;
 }
 
 .page {
@@ -30,6 +31,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 24px;
+  min-height: 100vh;
 }
 
 .hero {
@@ -112,8 +114,9 @@ body {
 }
 
 canvas {
-  width: min(92vw, 620px);
+  width: min(92vw, 620px, calc(70vh * 21 / 27));
   height: auto;
+  aspect-ratio: 21 / 27;
   display: block;
   margin: 0 auto;
   border-radius: 14px;

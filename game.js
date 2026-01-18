@@ -26,15 +26,15 @@ const DIRS = {
 
 const BASE_MAP = [
   "#####################",
-  "#GGGGGGG##..#########",
-  "#GGGGGGG##..#########",
-  "#GGGGGGG##.........##",
-  "#GGGGGGG##...GGGGG.##",
-  "#.########..#.GGGG.##",
-  "#.########P.##.GGG.##",
-  "#..S........###.GG.##",
-  "#.########..####.GE##",
-  "#.########..######S##",
+  "#GGGGGGG##..####.....",
+  "#GGGGGGG##..####.GG..",
+  "#GGGGGGG##.......GG..",
+  "#GGGGGGG##...GGG.GG..",
+  "#.########..#.GG.GG..",
+  "#.########P.##.G.GG..",
+  "#..S........###..GG..",
+  "#.########..####.GG..",
+  "#.########..####.....",
   "#......S....######.##",
   "#.########..######E##",
   "#..S........######.##",
@@ -509,6 +509,15 @@ function setNextDir(dir) {
 function bindControls() {
   window.addEventListener("keydown", (event) => {
     const key = event.key.toLowerCase();
+    if (
+      key === " " ||
+      key === "arrowup" ||
+      key === "arrowdown" ||
+      key === "arrowleft" ||
+      key === "arrowright"
+    ) {
+      event.preventDefault();
+    }
     if (key === "arrowup" || key === "w") setNextDir("up");
     if (key === "arrowdown" || key === "s") setNextDir("down");
     if (key === "arrowleft" || key === "a") setNextDir("left");
