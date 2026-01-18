@@ -80,6 +80,28 @@ const COLORS = {
   enemy: "#e36f4e",
 };
 
+const sprites = {
+  journo: new Image(),
+  roadman: new Image(),
+  barber: new Image(),
+  loaded: false,
+  readyCount: 0,
+};
+
+sprites.journo.src = "sprites/journo.png";
+sprites.roadman.src = "sprites/roadman.png";
+sprites.barber.src = "sprites/barber.png";
+
+[sprites.journo, sprites.roadman, sprites.barber].forEach((img) => {
+  img.addEventListener("load", () => {
+    sprites.readyCount += 1;
+    sprites.loaded = sprites.readyCount === 3;
+  });
+  img.addEventListener("error", () => {
+    sprites.loaded = false;
+  });
+});
+
 let state = STATE.BOOT;
 let roundIndex = 1;
 let tiles = [];
@@ -439,6 +461,10 @@ function drawTile(x, y, color) {
   ctx.fillRect(x * TILE_PX, y * TILE_PX, TILE_PX, TILE_PX);
 }
 
+function drawSpriteAt(image, centerX, centerY, size) {
+  ctx.drawImage(image, centerX - size / 2, centerY - size / 2, size, size);
+}
+
 function draw() {
   ctx.fillStyle = COLORS.path;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -468,27 +494,51 @@ function draw() {
   });
 
   shops.forEach((shop) => {
-    let color = COLORS.shop;
-    if (shop.exposed) color = COLORS.shopExposed;
-    ctx.fillStyle = color;
-    ctx.fillRect(
-      shop.x * TILE_PX + TILE_PX * 0.2,
-      shop.y * TILE_PX + TILE_PX * 0.2,
-      TILE_PX * 0.6,
-      TILE_PX * 0.6
-    );
+    const center = tileCenter(shop);
+    if (sprites.loaded) {
+      const size = TILE_PX * 0.85;
+      drawSpriteAt(sprites.barber, center.x, center.y, size);
+      if (shop.exposed) {
+        ctx.strokeStyle = COLORS.shopExposed;
+        ctx.lineWidth = 3;
+        ctx.strokeRect(
+          shop.x * TILE_PX + TILE_PX * 0.15,
+          shop.y * TILE_PX + TILE_PX * 0.15,
+          TILE_PX * 0.7,
+          TILE_PX * 0.7
+        );
+      }
+    } else {
+      let color = COLORS.shop;
+      if (shop.exposed) color = COLORS.shopExposed;
+      ctx.fillStyle = color;
+      ctx.fillRect(
+        shop.x * TILE_PX + TILE_PX * 0.2,
+        shop.y * TILE_PX + TILE_PX * 0.2,
+        TILE_PX * 0.6,
+        TILE_PX * 0.6
+      );
+    }
   });
 
-  ctx.fillStyle = COLORS.player;
-  ctx.beginPath();
-  ctx.arc(player.x, player.y, TILE_PX * 0.3, 0, Math.PI * 2);
-  ctx.fill();
+  if (sprites.loaded) {
+    drawSpriteAt(sprites.journo, player.x, player.y, TILE_PX * 0.82);
+  } else {
+    ctx.fillStyle = COLORS.player;
+    ctx.beginPath();
+    ctx.arc(player.x, player.y, TILE_PX * 0.3, 0, Math.PI * 2);
+    ctx.fill();
+  }
 
   enemies.forEach((enemy) => {
-    ctx.fillStyle = COLORS.enemy;
-    ctx.beginPath();
-    ctx.arc(enemy.x, enemy.y, TILE_PX * 0.28, 0, Math.PI * 2);
-    ctx.fill();
+    if (sprites.loaded) {
+      drawSpriteAt(sprites.roadman, enemy.x, enemy.y, TILE_PX * 0.78);
+    } else {
+      ctx.fillStyle = COLORS.enemy;
+      ctx.beginPath();
+      ctx.arc(enemy.x, enemy.y, TILE_PX * 0.28, 0, Math.PI * 2);
+      ctx.fill();
+    }
   });
 }
 
