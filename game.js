@@ -607,7 +607,12 @@ function nearestShopDistance() {
 function attemptAccuse() {
   if (state !== STATE.PLAYING) return;
   const nearShop = getNearbyShop();
-  if (!nearShop) return;
+  if (!nearShop) {
+    messageText = "No shop nearby to accuse.";
+    messageColor = "#d9332b";
+    messageTimer = 120;
+    return;
+  }
   if (clueMeter < clueTarget) {
     messageText = "you dont have enough clues to accuse a shop";
     messageColor = "#d9332b";
@@ -674,7 +679,7 @@ function updateHUD() {
   }
   accuseFloat.style.display = "block";
   accuseFloat.style.opacity = opacity.toFixed(2);
-  accuseFloat.disabled = !nearShop || clueMeter < clueTarget;
+  accuseFloat.disabled = state !== STATE.PLAYING;
 }
 
 function updateTimers() {
