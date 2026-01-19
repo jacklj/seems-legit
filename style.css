@@ -28,6 +28,7 @@ body {
   color: var(--ink);
   min-height: 100vh;
   overflow: hidden;
+  touch-action: manipulation;
 }
 
 .page {

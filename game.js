@@ -958,6 +958,13 @@ function preventDoubleTapZoom(element) {
     },
     { passive: false }
   );
+  element.addEventListener(
+    "gesturestart",
+    (event) => {
+      event.preventDefault();
+    },
+    { passive: false }
+  );
 }
 
 function bindControls() {
@@ -993,6 +1000,7 @@ function bindControls() {
   preventDoubleTapZoom(accuseFloat);
   preventDoubleTapZoom(hudPanel);
   preventDoubleTapZoom(infoBtn);
+  preventDoubleTapZoom(document);
 
   canvas.addEventListener("pointerdown", (event) => {
     const rect = canvas.getBoundingClientRect();
