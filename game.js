@@ -38,6 +38,7 @@ const closeInfoModal = () => {
 const TILE = 16;
 const SCALE = 3;
 const TILE_PX = TILE * SCALE;
+const CLUE_TARGET = 10;
 
 const DIRS = {
   up: { x: 0, y: -1 },
@@ -327,7 +328,7 @@ function startRound() {
   buildShopSlots();
   const numShops = Math.min(shopSlots.length, 4 + (roundIndex - 1));
   const badShopCount = 3;
-  clueTarget = 20 + roundIndex * 5;
+  clueTarget = CLUE_TARGET;
 
   const chosenShops = shuffle(shopSlots).slice(0, numShops);
   shops = chosenShops.map((slot) => ({
@@ -657,7 +658,7 @@ function updateTimers() {
 function checkLossCondition() {
   const remainingBad = 3 - exposedBadCount;
   if (remainingBad <= 0) return;
-  if (clueMeter + clues.size < clueTarget * remainingBad) {
+  if (clueMeter + clues.size < CLUE_TARGET * remainingBad) {
     enterRoundLose();
   }
 }
