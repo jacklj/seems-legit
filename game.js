@@ -61,7 +61,7 @@ const BASE_MAP = [
   "#.####.GGG.GG..####.#",
   "#......GGGEGGG..###.#",
   "#.####.GGG.GGGG..##.#",
-  "#..........GGGGG..#.#",
+  "#..........GGDGG..#.#",
   "#.########.GGGGGG...#",
   "#.########.GGGGGGGG.#",
   "#.########..........#",
@@ -151,6 +151,7 @@ const sprites = {
   barber: new Image(),
   tube: new Image(),
   laundry: new Image(),
+  shank: new Image(),
   loaded: false,
   readyCount: 0,
 };
@@ -160,6 +161,7 @@ sprites.roadman.src = "sprites/roadman.png";
 sprites.barber.src = "sprites/barber.png";
 sprites.tube.src = "sprites/tube.png";
 sprites.laundry.src = "sprites/laundry.png";
+sprites.shank.src = "sprites/shank.png";
 
 [
   sprites.journo,
@@ -167,10 +169,11 @@ sprites.laundry.src = "sprites/laundry.png";
   sprites.barber,
   sprites.tube,
   sprites.laundry,
+  sprites.shank,
 ].forEach((img) => {
   img.addEventListener("load", () => {
     sprites.readyCount += 1;
-    sprites.loaded = sprites.readyCount === 5;
+    sprites.loaded = sprites.readyCount === 6;
   });
   img.addEventListener("error", () => {
     sprites.loaded = false;
@@ -237,6 +240,8 @@ function parseBaseMap() {
         row.push(2);
       } else if (char === "T") {
         row.push(3);
+      } else if (char === "D") {
+        row.push(4);
       } else {
         row.push(1);
       }
@@ -694,6 +699,14 @@ function drawSpriteAt(image, centerX, centerY, size) {
   ctx.drawImage(image, centerX - size / 2, centerY - size / 2, size, size);
 }
 
+function drawRotatedSprite(image, centerX, centerY, size, angle) {
+  ctx.save();
+  ctx.translate(centerX, centerY);
+  ctx.rotate(angle);
+  ctx.drawImage(image, -size / 2, -size / 2, size, size);
+  ctx.restore();
+}
+
 function draw() {
   ctx.fillStyle = COLORS.path;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -702,7 +715,7 @@ function draw() {
     for (let x = 0; x < MAP_WIDTH; x += 1) {
       if (tiles[y][x] === 0) {
         drawTile(x, y, COLORS.wall);
-      } else if (tiles[y][x] === 2) {
+      } else if (tiles[y][x] === 2 || tiles[y][x] === 4) {
         drawTile(x, y, COLORS.park);
       }
     }
@@ -716,6 +729,27 @@ function draw() {
         drawSpriteAt(sprites.tube, center.x, center.y, TILE_PX * 1.3);
       } else {
         drawTile(x, y, COLORS.tube);
+      }
+    }
+  }
+
+  for (let y = 0; y < MAP_HEIGHT; y += 1) {
+    for (let x = 0; x < MAP_WIDTH; x += 1) {
+      if (tiles[y][x] !== 4) continue;
+      const center = tileCenter({ x, y });
+      if (sprites.loaded) {
+        const dx = player.x - center.x;
+        const dy = player.y - center.y;
+        const angle = Math.atan2(dy, dx) + Math.PI / 2;
+        drawRotatedSprite(sprites.shank, center.x, center.y, TILE_PX * 2.2, angle);
+      } else {
+        ctx.fillStyle = COLORS.wall;
+        ctx.beginPath();
+        ctx.moveTo(center.x, center.y - TILE_PX * 0.35);
+        ctx.lineTo(center.x - TILE_PX * 0.18, center.y + TILE_PX * 0.3);
+        ctx.lineTo(center.x + TILE_PX * 0.18, center.y + TILE_PX * 0.3);
+        ctx.closePath();
+        ctx.fill();
       }
     }
   }
