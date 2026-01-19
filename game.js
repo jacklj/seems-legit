@@ -601,6 +601,7 @@ function attemptAccuse() {
   if (nearShop.isBad) {
     nearShop.exposed = true;
     exposedBadCount += 1;
+    penaltyStacks = Math.max(0, penaltyStacks - 1);
     updateFrontMeter();
     freezeTimer = 60;
     messageText =
@@ -612,7 +613,7 @@ function attemptAccuse() {
     }
   } else {
     penaltyStacks += 1;
-    messageText = "Wrong - that shop is real! Back to the drawing board...";
+    messageText = "Wrong - that shop is legit! Back to the drawing board...";
     messageColor = "#d9332b";
     messageTimer = 120;
   }
