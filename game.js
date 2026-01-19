@@ -113,6 +113,7 @@ const STATE = {
   ROUND_INTRO: "ROUND_INTRO",
   PLAYING: "PLAYING",
   ROUND_WIN: "ROUND_WIN",
+  ROUND_LOSE: "ROUND_LOSE",
 };
 
 const COLORS = {
@@ -351,6 +352,7 @@ function hideOverlay() {
 function enterRoundIntro() {
   state = STATE.ROUND_INTRO;
   showOverlay(`Round ${roundIndex}`, "Follow the clues. Expose 3 money laundering fronts.");
+  startBtn.textContent = "Start";
   startBtn.hidden = false;
 }
 
@@ -364,6 +366,13 @@ function enterRoundWin() {
     startRound();
     enterRoundIntro();
   }, 1600);
+}
+
+function enterRoundLose() {
+  state = STATE.ROUND_LOSE;
+  showOverlay("It's the end of the road, pal", "The trail's gone cold.");
+  startBtn.textContent = "Play again";
+  startBtn.hidden = false;
 }
 
 function isWall(tileX, tileY) {
@@ -557,7 +566,7 @@ function updateHits() {
       const center = tileCenter(playerSpawn);
       player.x = center.x;
       player.y = center.y;
-      clueMeter = Math.floor(clueMeter * 0.5);
+      clueMeter = 0;
       messageText = "The mandem won this one...";
       messageColor = "#d9332b";
       messageTimer = 120;
@@ -591,6 +600,14 @@ function updateTimers() {
   if (tapTimer > 0) tapTimer -= 1;
 }
 
+function checkLossCondition() {
+  const remainingBad = 3 - exposedBadCount;
+  if (remainingBad <= 0) return;
+  if (clueMeter + clues.size < clueTarget * remainingBad) {
+    enterRoundLose();
+  }
+}
+
 function update() {
   if (state !== STATE.PLAYING) return;
   updatePlayer();
@@ -599,6 +616,7 @@ function update() {
   updateHits();
   updateTimers();
   updateHUD();
+  checkLossCondition();
 }
 
 function drawTile(x, y, color) {
@@ -836,9 +854,17 @@ function bindControls() {
   });
 
   startBtn.addEventListener("click", () => {
-    if (state !== STATE.ROUND_INTRO) return;
-    hideOverlay();
-    state = STATE.PLAYING;
+    if (state === STATE.ROUND_INTRO) {
+      hideOverlay();
+      state = STATE.PLAYING;
+      return;
+    }
+    if (state === STATE.ROUND_LOSE) {
+      hideOverlay();
+      roundIndex = 1;
+      startRound();
+      state = STATE.PLAYING;
+    }
   });
 }
 
