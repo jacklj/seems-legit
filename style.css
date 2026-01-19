@@ -178,19 +178,20 @@ body {
 
 .canvas-shell {
   position: relative;
-  background: #f8f0e6;
-  border-radius: 18px;
-  padding: 14px;
-  box-shadow: 0 18px 40px var(--shadow);
+  padding: 0;
+  width: 100%;
+  max-width: min(92vw, 620px, calc(70vh * 21 / 27));
+  margin: 0 auto;
 }
 
 canvas {
-  width: min(92vw, 620px, calc(70vh * 21 / 27));
+  width: 100%;
+  max-width: 100%;
   height: auto;
   aspect-ratio: 21 / 27;
   display: block;
-  margin: 0 auto;
-  border-radius: 14px;
+  margin: 0;
+  border-radius: 0;
   background: #efe3d6;
   border: 2px solid rgba(28, 21, 18, 0.15);
   touch-action: none;
@@ -198,12 +199,12 @@ canvas {
 
 .overlay {
   position: absolute;
-  inset: 14px;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   background: rgba(28, 21, 18, 0.4);
-  border-radius: 14px;
+  border-radius: 0;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
