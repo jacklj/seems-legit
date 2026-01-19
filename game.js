@@ -38,8 +38,8 @@ const closeInfoModal = () => {
 const TILE = 16;
 const SCALE = 3;
 const TILE_PX = TILE * SCALE;
-const CLUE_TARGET = 10;
-const CLUE_PIP_RATIO = 0.5;
+const CLUE_TARGET = 8;
+const CLUE_PIP_RATIO = 0.3;
 
 const DIRS = {
   up: { x: 0, y: -1 },
@@ -360,6 +360,8 @@ function startRound() {
     }
   }
   const clueCount = Math.round(eligibleClues.length * CLUE_PIP_RATIO);
+  console.log("Number of clues:", clueCount);
+  console.log("Min clues required: ", CLUE_TARGET * (3 - exposedBadCount));
   shuffle(eligibleClues)
     .slice(0, clueCount)
     .forEach((tile) => {
