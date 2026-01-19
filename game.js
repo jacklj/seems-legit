@@ -22,12 +22,14 @@ const openInfoModal = () => {
   infoModal.classList.add("show");
   infoModal.setAttribute("aria-hidden", "false");
   infoBtn.setAttribute("aria-expanded", "true");
+  requestAnimationFrame(sizeCanvasToViewport);
 };
 
 const closeInfoModal = () => {
   infoModal.classList.remove("show");
   infoModal.setAttribute("aria-hidden", "true");
   infoBtn.setAttribute("aria-expanded", "false");
+  requestAnimationFrame(sizeCanvasToViewport);
 };
 
 const TILE = 16;
@@ -79,7 +81,7 @@ canvas.width = MAP_WIDTH * TILE_PX;
 canvas.height = MAP_HEIGHT * TILE_PX;
 const canvasShell = canvas.parentElement;
 const gameWrap = document.querySelector(".game-wrap");
-const hero = document.querySelector(".hero");
+const hudPanel = document.querySelector(".hud-panel");
 
 const sizeCanvasToViewport = () => {
   if (!canvasShell || !gameWrap) {
@@ -90,23 +92,32 @@ const sizeCanvasToViewport = () => {
     return;
   }
   const ratio = canvas.width / canvas.height;
+  const hudRect = hudPanel ? hudPanel.getBoundingClientRect() : null;
+  const availableHeight = wrapRect.height - (hudRect ? hudRect.height : 0);
+  const safeHeight = Math.max(0, availableHeight);
   let width = wrapRect.width;
   let height = width / ratio;
-  if (height > wrapRect.height) {
-    height = wrapRect.height;
+  if (height > safeHeight) {
+    height = safeHeight;
     width = height * ratio;
   }
   canvasShell.style.width = `${Math.floor(width)}px`;
   canvasShell.style.height = `${Math.floor(height)}px`;
-  if (hero) {
-    hero.style.width = `${Math.floor(width)}px`;
-    hero.style.marginLeft = "auto";
-    hero.style.marginRight = "auto";
+  if (hudPanel) {
+    hudPanel.style.width = `${Math.floor(width)}px`;
+    hudPanel.style.marginLeft = "auto";
+    hudPanel.style.marginRight = "auto";
   }
 };
 
 window.addEventListener("resize", sizeCanvasToViewport);
 sizeCanvasToViewport();
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(sizeCanvasToViewport);
+}
+window.addEventListener("load", () => {
+  requestAnimationFrame(sizeCanvasToViewport);
+});
 
 const STATE = {
   BOOT: "BOOT",

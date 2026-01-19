@@ -9,28 +9,6 @@
   </head>
   <body>
     <div class="page">
-      <header class="hero">
-        <div class="hud">
-          <div class="hud-top">
-            <div class="meter">
-              <div class="meter-fill" id="clueFill"></div>
-              <span class="meter-text" id="clueText">CLUES: 0/0</span>
-            </div>
-            <div class="hud-stats">
-              <span id="exposedText">FRONTS: 0/3</span>
-              <span id="heatText">HEAT: x1.0</span>
-            </div>
-          </div>
-          <div class="round-and-expose">
-            <span class="round-badge" id="roundBadge">Round 1</span>
-            <button class="accuse-float hud-accuse" id="accuseFloat" type="button">Accuse</button>
-          </div>
-        </div>
-        <button class="info-btn floating" id="infoBtn" type="button" aria-haspopup="dialog" aria-controls="infoModal" aria-expanded="false">
-          i
-        </button>
-      </header>
-
       <main class="game-wrap">
         <div class="canvas-shell">
           <canvas id="game" width="1008" height="1296" aria-label="The Ladder game"></canvas>
@@ -43,6 +21,27 @@
               <button class="start-btn" id="startBtn" type="button">Start</button>
             </div>
           </div>
+        </div>
+        <div class="hud-panel">
+          <div class="hud">
+            <div class="hud-top">
+              <div class="meter">
+                <div class="meter-fill" id="clueFill"></div>
+                <span class="meter-text" id="clueText">CLUES: 0/0</span>
+              </div>
+              <div class="hud-stats">
+                <span id="exposedText">FRONTS: 0/3</span>
+                <span id="heatText">HEAT: x1.0</span>
+              </div>
+            </div>
+            <div class="round-and-expose">
+              <span class="round-badge" id="roundBadge">Round 1</span>
+              <button class="accuse-float hud-accuse" id="accuseFloat" type="button">Accuse</button>
+            </div>
+          </div>
+          <button class="info-btn" id="infoBtn" type="button" aria-haspopup="dialog" aria-controls="infoModal" aria-expanded="false">
+            i
+          </button>
         </div>
         <div class="controls"></div>
       </main>

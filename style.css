@@ -41,15 +41,15 @@ body {
 }
 
 
-.hero {
+.hud-panel {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
   justify-content: space-between;
   gap: 18px;
   background: rgba(248, 240, 230, 0.85);
-  border-top-left-radius: 18px;
-  border-top-right-radius: 18px;
+  border-bottom-left-radius: 18px;
+  border-bottom-right-radius: 18px;
   padding: 18px 22px;
   box-shadow: 0 12px 30px var(--shadow);
   position: relative;
@@ -183,8 +183,10 @@ body {
   display: flex;
   flex: 1;
   min-height: 0;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
   justify-content: flex-start;
+  gap: 0;
 }
 
 .canvas-shell {
@@ -385,7 +387,7 @@ canvas {
     font-size: 0.75rem;
   }
 
-  .hero {
+  .hud-panel {
     padding: 15px 10px;
   }
 }
