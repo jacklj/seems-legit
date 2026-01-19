@@ -180,6 +180,7 @@ let freezeTimer = 0;
 let hitCooldown = 0;
 let messageTimer = 0;
 let messageText = "";
+let messageColor = "#d9332b";
 let tapDir = null;
 let tapTimer = 0;
 let tapPos = { x: 0, y: 0 };
@@ -512,6 +513,7 @@ function attemptAccuse() {
   if (!nearShop) return;
   if (clueMeter < clueTarget) {
     messageText = "you dont have enough clues to accuse a shop";
+    messageColor = "#d9332b";
     messageTimer = 120;
     return;
   }
@@ -521,11 +523,17 @@ function attemptAccuse() {
     nearShop.exposed = true;
     exposedBadCount += 1;
     freezeTimer = 60;
+    messageText = "Nice one! I thought there were too many barber shops here...";
+    messageColor = "#2f8f5b";
+    messageTimer = 120;
     if (exposedBadCount >= 3) {
       enterRoundWin();
     }
   } else {
     penaltyStacks += 1;
+    messageText = "Wrong - that shop is real! Back to the drawing board...";
+    messageColor = "#d9332b";
+    messageTimer = 120;
   }
 }
 
@@ -541,6 +549,9 @@ function updateHits() {
       player.x = center.x;
       player.y = center.y;
       clueMeter = Math.floor(clueMeter * 0.5);
+      messageText = "The mandem won this one...";
+      messageColor = "#d9332b";
+      messageTimer = 120;
       hitCooldown = 60;
     }
   });
@@ -691,7 +702,7 @@ function draw() {
     ctx.globalAlpha = alpha;
     ctx.fillStyle = "rgba(28, 21, 18, 0.7)";
     ctx.fillRect(0, canvas.height / 2 - 34 + rise, canvas.width, 68);
-    ctx.fillStyle = "#d9332b";
+    ctx.fillStyle = messageColor;
     ctx.font = "bold 24px 'Gill Sans', 'Trebuchet MS', sans-serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
