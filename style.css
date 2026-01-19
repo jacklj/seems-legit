@@ -115,6 +115,7 @@ body {
   letter-spacing: 0.12em;
   font-size: 0.75rem;
   font-weight: 700;
+  font-family: "Aerosoldier", "Palatino Linotype", "Book Antiqua", Palatino, serif;
 }
 
 
@@ -318,6 +319,7 @@ canvas {
   text-transform: uppercase;
   letter-spacing: 0.12em;
   font-size: 0.75rem;
+  font-family: "Aerosoldier", "Palatino Linotype", "Book Antiqua", Palatino, serif;
   cursor: pointer;
   box-shadow: 0 10px 18px rgba(28, 21, 18, 0.25);
   display: none;
@@ -363,6 +365,7 @@ canvas {
   font-size: 1.6rem;
   text-transform: uppercase;
   letter-spacing: 0.14em;
+  font-family: "Aerosoldier", "Palatino Linotype", "Book Antiqua", Palatino, serif;
 }
 
 .overlay-body {
@@ -448,5 +451,3 @@ canvas {
   cursor: pointer;
   color: var(--ink);
 }
-
-

@@ -288,6 +288,33 @@ function clamp(val, min, max) {
   return Math.max(min, Math.min(max, val));
 }
 
+function toRoman(num) {
+  const map = [
+    [1000, "M"],
+    [900, "CM"],
+    [500, "D"],
+    [400, "CD"],
+    [100, "C"],
+    [90, "XC"],
+    [50, "L"],
+    [40, "XL"],
+    [10, "X"],
+    [9, "IX"],
+    [5, "V"],
+    [4, "IV"],
+    [1, "I"],
+  ];
+  let value = Math.max(1, Math.floor(num));
+  let out = "";
+  map.forEach(([amount, numeral]) => {
+    while (value >= amount) {
+      out += numeral;
+      value -= amount;
+    }
+  });
+  return out;
+}
+
 function startRound() {
   clueMeter = 0;
   exposedBadCount = 0;
@@ -374,7 +401,10 @@ function hideOverlay() {
 
 function enterRoundIntro() {
   state = STATE.ROUND_INTRO;
-  showOverlay(`Round ${roundIndex}`, "Follow the clues. Expose 3 money laundering fronts.");
+  showOverlay(
+    `Round ${toRoman(roundIndex)}`,
+    "Follow the clues. Expose 3 money laundering fronts."
+  );
   startBtn.textContent = "Start";
   startBtn.hidden = false;
 }
@@ -605,7 +635,7 @@ function updateHUD() {
   clueText.textContent = `CLUES: ${clueMeter}/${clueTarget}`;
   updateFrontMeter();
   heatText.textContent = `x${(1 + penaltyStacks * 0.2).toFixed(1)}`;
-  roundBadge.textContent = `Round ${roundIndex}`;
+  roundBadge.textContent = `Round ${toRoman(roundIndex)}`;
   const nearShop = getNearbyShop();
   const dist = nearestShopDistance();
   const baseOpacity = 0.2;
