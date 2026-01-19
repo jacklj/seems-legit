@@ -56,7 +56,7 @@ const BASE_MAP = [
   "#......GGG..........#",
   "#.####.GGG.########.#",
   "#.####.GGG..#######.#",
-  "#......GGG...######.#",
+  "#......GBG...######.#",
   "#.####.GGG.G..#####.#",
   "#.####.GGG.GG..####.#",
   "#......GGGEGGG..###.#",
@@ -152,6 +152,7 @@ const sprites = {
   tube: new Image(),
   laundry: new Image(),
   shank: new Image(),
+  bball: new Image(),
   loaded: false,
   readyCount: 0,
 };
@@ -162,6 +163,7 @@ sprites.barber.src = "sprites/barber.png";
 sprites.tube.src = "sprites/tube.png";
 sprites.laundry.src = "sprites/laundry.png";
 sprites.shank.src = "sprites/shank.png";
+sprites.bball.src = "sprites/bball.png";
 
 [
   sprites.journo,
@@ -170,10 +172,11 @@ sprites.shank.src = "sprites/shank.png";
   sprites.tube,
   sprites.laundry,
   sprites.shank,
+  sprites.bball,
 ].forEach((img) => {
   img.addEventListener("load", () => {
     sprites.readyCount += 1;
-    sprites.loaded = sprites.readyCount === 6;
+    sprites.loaded = sprites.readyCount === 7;
   });
   img.addEventListener("error", () => {
     sprites.loaded = false;
@@ -214,6 +217,7 @@ let tapTimer = 0;
 let tapPos = { x: 0, y: 0 };
 let enterPressCount = 0;
 let timeScale = 1;
+let timeSeconds = 0;
 
 const player = {
   x: 0,
@@ -242,6 +246,8 @@ function parseBaseMap() {
         row.push(3);
       } else if (char === "D") {
         row.push(4);
+      } else if (char === "B") {
+        row.push(5);
       } else {
         row.push(1);
       }
@@ -681,6 +687,7 @@ function checkLossCondition() {
 
 function update() {
   if (state !== STATE.PLAYING) return;
+  timeSeconds += STEP / 1000;
   updatePlayer();
   updateClues();
   updateEnemies();
@@ -715,7 +722,7 @@ function draw() {
     for (let x = 0; x < MAP_WIDTH; x += 1) {
       if (tiles[y][x] === 0) {
         drawTile(x, y, COLORS.wall);
-      } else if (tiles[y][x] === 2 || tiles[y][x] === 4) {
+      } else if (tiles[y][x] === 2 || tiles[y][x] === 4 || tiles[y][x] === 5) {
         drawTile(x, y, COLORS.park);
       }
     }
@@ -749,6 +756,35 @@ function draw() {
         ctx.lineTo(center.x - TILE_PX * 0.18, center.y + TILE_PX * 0.3);
         ctx.lineTo(center.x + TILE_PX * 0.18, center.y + TILE_PX * 0.3);
         ctx.closePath();
+        ctx.fill();
+      }
+    }
+  }
+
+  for (let y = 0; y < MAP_HEIGHT; y += 1) {
+    for (let x = 0; x < MAP_WIDTH; x += 1) {
+      if (tiles[y][x] !== 5) continue;
+      const center = tileCenter({ x, y });
+      if (sprites.loaded) {
+        const bounceCycle = 1.2;
+        const flightTime = 0.9;
+        const phase = timeSeconds % bounceCycle;
+        let bounce = 0;
+        if (phase < flightTime) {
+          const t = phase / flightTime;
+          const arc = Math.sin(Math.PI * t);
+          bounce = arc * arc * (TILE_PX * 0.3);
+        }
+        drawSpriteAt(
+          sprites.bball,
+          center.x,
+          center.y - bounce,
+          TILE_PX * 2.6
+        );
+      } else {
+        ctx.fillStyle = COLORS.enemy;
+        ctx.beginPath();
+        ctx.arc(center.x, center.y, TILE_PX * 0.28, 0, Math.PI * 2);
         ctx.fill();
       }
     }
