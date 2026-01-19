@@ -18,6 +18,18 @@ const overlay = document.getElementById("overlay");
 const overlayTitle = document.getElementById("overlayTitle");
 const overlayBody = document.getElementById("overlayBody");
 
+const openInfoModal = () => {
+  infoModal.classList.add("show");
+  infoModal.setAttribute("aria-hidden", "false");
+  infoBtn.setAttribute("aria-expanded", "true");
+};
+
+const closeInfoModal = () => {
+  infoModal.classList.remove("show");
+  infoModal.setAttribute("aria-hidden", "true");
+  infoBtn.setAttribute("aria-expanded", "false");
+};
+
 const TILE = 16;
 const SCALE = 3;
 const TILE_PX = TILE * SCALE;
@@ -731,9 +743,7 @@ function bindControls() {
   window.addEventListener("keydown", (event) => {
     const key = event.key.toLowerCase();
     if (key === "escape" && infoModal.classList.contains("show")) {
-      infoModal.classList.remove("show");
-      infoModal.setAttribute("aria-hidden", "true");
-      infoBtn.setAttribute("aria-expanded", "false");
+      closeInfoModal();
       return;
     }
     if (
@@ -792,22 +802,16 @@ function bindControls() {
   });
 
   infoBtn.addEventListener("click", () => {
-    infoModal.classList.add("show");
-    infoModal.setAttribute("aria-hidden", "false");
-    infoBtn.setAttribute("aria-expanded", "true");
+    openInfoModal();
   });
 
   infoClose.addEventListener("click", () => {
-    infoModal.classList.remove("show");
-    infoModal.setAttribute("aria-hidden", "true");
-    infoBtn.setAttribute("aria-expanded", "false");
+    closeInfoModal();
   });
 
   infoModal.addEventListener("click", (event) => {
     if (event.target === infoModal) {
-      infoModal.classList.remove("show");
-      infoModal.setAttribute("aria-hidden", "true");
-      infoBtn.setAttribute("aria-expanded", "false");
+      closeInfoModal();
     }
   });
 
@@ -822,5 +826,6 @@ parseBaseMap();
 startRound();
 enterRoundIntro();
 bindControls();
+openInfoModal();
 updateHUD();
 requestAnimationFrame(loop);
