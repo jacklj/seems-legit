@@ -40,22 +40,6 @@ body {
   height: 100vh;
 }
 
-
-.hud-panel {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 18px;
-  background: rgba(248, 240, 230, 0.85);
-  border-bottom-left-radius: 18px;
-  border-bottom-right-radius: 18px;
-  padding: 18px 22px;
-  box-shadow: 0 12px 30px var(--shadow);
-  position: relative;
-  width: 100%;
-}
-
 .hero-title {
   display: block;
   font-family: "Aerosoldier", "Palatino Linotype", "Book Antiqua", Palatino, serif;
@@ -133,12 +117,31 @@ body {
   font-weight: 700;
 }
 
+
+.hud-panel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  background: rgba(248, 240, 230, 0.85);
+  border-bottom-left-radius: 18px;
+  border-bottom-right-radius: 18px;
+  box-shadow: 0 12px 30px var(--shadow);
+  position: relative;
+  width: 100%;
+  container-type: inline-size;
+  container-name: hud-panel;
+}
+
+
 .hud {
   min-width: 220px;
   display: flex;
   flex-direction: column;
   gap: 8px;
   text-align: right;
+  margin: 18px 22px;
 }
 
 .hud-top {
@@ -237,6 +240,31 @@ body {
   justify-content: space-between;
   align-items: center;
   gap: 12px;
+}
+
+
+@container hud-panel (max-width: 400px) {
+  .hud {
+    margin: 15px 10px;
+  }
+
+  .hud-stat {
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .hud-label {
+    font-size: 0.6rem;
+  }
+
+  .heat-meter {
+    font-size: 0.75rem;
+  }
+
+  .hud-panel {
+    padding: 15px 10px;
+  }
 }
 
 .game-wrap {
@@ -421,28 +449,4 @@ canvas {
   color: var(--ink);
 }
 
-@media (max-width: 500px) {
-  .hud-stat {
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-  }
 
-  .hud-label {
-    font-size: 0.6rem;
-  }
-
-  .heat-meter {
-    font-size: 0.75rem;
-  }
-
-  .info-btn.floating {
-    top: auto;
-    bottom: 12px;
-    right: 12px;
-  }
-
-  .hud-panel {
-    padding: 15px 10px;
-  }
-}
