@@ -338,6 +338,14 @@ canvas {
   image-rendering: pixelated;
 }
 
+.clue-dot {
+  width: 8px;
+  height: 8px;
+  margin: 15px;
+  border-radius: 50%;
+  background: #f3c16c;
+}
+
 .modal-close {
   position: absolute;
   top: 10px;
