@@ -68,7 +68,7 @@ const BASE_MAP = [
   "#..........########.#",
   "#.########.########.#",
   "#.########..........#",
-  "#.########.########.#",
+  "#.###K####.########.#",
   "#.########.########.#",
   "#.########..........#",
   "#..........########.#",
@@ -153,6 +153,7 @@ const sprites = {
   laundry: new Image(),
   shank: new Image(),
   bball: new Image(),
+  kebab: new Image(),
   loaded: false,
   readyCount: 0,
 };
@@ -164,6 +165,7 @@ sprites.tube.src = "sprites/tube.png";
 sprites.laundry.src = "sprites/laundry.png";
 sprites.shank.src = "sprites/shank.png";
 sprites.bball.src = "sprites/bball.png";
+sprites.kebab.src = "sprites/kebab.png";
 
 [
   sprites.journo,
@@ -173,10 +175,11 @@ sprites.bball.src = "sprites/bball.png";
   sprites.laundry,
   sprites.shank,
   sprites.bball,
+  sprites.kebab,
 ].forEach((img) => {
   img.addEventListener("load", () => {
     sprites.readyCount += 1;
-    sprites.loaded = sprites.readyCount === 7;
+    sprites.loaded = sprites.readyCount === 8;
   });
   img.addEventListener("error", () => {
     sprites.loaded = false;
@@ -248,6 +251,8 @@ function parseBaseMap() {
         row.push(4);
       } else if (char === "B") {
         row.push(5);
+      } else if (char === "K") {
+        row.push(6);
       } else {
         row.push(1);
       }
@@ -722,7 +727,12 @@ function draw() {
     for (let x = 0; x < MAP_WIDTH; x += 1) {
       if (tiles[y][x] === 0) {
         drawTile(x, y, COLORS.wall);
-      } else if (tiles[y][x] === 2 || tiles[y][x] === 4 || tiles[y][x] === 5) {
+      } else if (
+        tiles[y][x] === 2 ||
+        tiles[y][x] === 4 ||
+        tiles[y][x] === 5 ||
+        tiles[y][x] === 6
+      ) {
         drawTile(x, y, COLORS.park);
       }
     }
@@ -766,15 +776,9 @@ function draw() {
       if (tiles[y][x] !== 5) continue;
       const center = tileCenter({ x, y });
       if (sprites.loaded) {
-        const bounceCycle = 1.2;
-        const flightTime = 0.9;
-        const phase = timeSeconds % bounceCycle;
-        let bounce = 0;
-        if (phase < flightTime) {
-          const t = phase / flightTime;
-          const arc = Math.sin(Math.PI * t);
-          bounce = arc * arc * (TILE_PX * 0.3);
-        }
+        const t = (timeSeconds * 1) % 1;
+        const arc = Math.sin(Math.PI * t);
+        const bounce = Math.pow(arc, 1.6) * (TILE_PX * 0.32);
         drawSpriteAt(
           sprites.bball,
           center.x,
@@ -786,6 +790,26 @@ function draw() {
         ctx.beginPath();
         ctx.arc(center.x, center.y, TILE_PX * 0.28, 0, Math.PI * 2);
         ctx.fill();
+      }
+    }
+  }
+
+  for (let y = 0; y < MAP_HEIGHT; y += 1) {
+    for (let x = 0; x < MAP_WIDTH; x += 1) {
+      if (tiles[y][x] !== 6) continue;
+      const center = tileCenter({ x, y });
+      if (sprites.loaded) {
+        drawTile(x, y, COLORS.wall);
+        drawSpriteAt(sprites.kebab, center.x, center.y, TILE_PX * 2.6);
+      } else {
+        drawTile(x, y, COLORS.wall);
+        ctx.fillStyle = COLORS.shopBad;
+        ctx.fillRect(
+          center.x - TILE_PX * 0.18,
+          center.y - TILE_PX * 0.3,
+          TILE_PX * 0.36,
+          TILE_PX * 0.6
+        );
       }
     }
   }
