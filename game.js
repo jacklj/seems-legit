@@ -584,7 +584,7 @@ function getNearbyShop() {
     if (shop.exposed) return false;
     const dx = shop.x - playerTile.x;
     const dy = shop.y - playerTile.y;
-    return Math.hypot(dx, dy) <= 1;
+    return Math.hypot(dx, dy) <= 2;
   });
 }
 
@@ -668,8 +668,9 @@ function updateHUD() {
   const dist = nearestShopDistance();
   const baseOpacity = 0.2;
   let opacity = baseOpacity;
-  if (state === STATE.PLAYING && dist <= 2) {
-    opacity = clamp(baseOpacity + (1 - (dist - 1)) * (1 - baseOpacity), 0, 1);
+  if (state === STATE.PLAYING && dist <= 3) {
+    const factor = clamp((3 - dist) / 1, 0, 1);
+    opacity = baseOpacity + factor * (1 - baseOpacity);
   }
   accuseFloat.style.display = "block";
   accuseFloat.style.opacity = opacity.toFixed(2);
