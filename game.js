@@ -67,6 +67,7 @@ canvas.width = MAP_WIDTH * TILE_PX;
 canvas.height = MAP_HEIGHT * TILE_PX;
 const canvasShell = canvas.parentElement;
 const gameWrap = document.querySelector(".game-wrap");
+const hero = document.querySelector(".hero");
 
 const sizeCanvasToViewport = () => {
   if (!canvasShell || !gameWrap) {
@@ -85,6 +86,11 @@ const sizeCanvasToViewport = () => {
   }
   canvasShell.style.width = `${Math.floor(width)}px`;
   canvasShell.style.height = `${Math.floor(height)}px`;
+  if (hero) {
+    hero.style.width = `${Math.floor(width)}px`;
+    hero.style.marginLeft = "auto";
+    hero.style.marginRight = "auto";
+  }
 };
 
 window.addEventListener("resize", sizeCanvasToViewport);
