@@ -193,6 +193,8 @@ const SUCCESS_MESSAGES = [
 let tapDir = null;
 let tapTimer = 0;
 let tapPos = { x: 0, y: 0 };
+let enterPressCount = 0;
+let timeScale = 1;
 
 const player = {
   x: 0,
@@ -370,7 +372,7 @@ function enterRoundWin() {
 
 function enterRoundLose() {
   state = STATE.ROUND_LOSE;
-  showOverlay("It's the end of the road, pal", "The trail's gone cold.");
+  showOverlay("The trail's gone cold", "You've run out of clues.");
   startBtn.textContent = "Play again";
   startBtn.hidden = false;
 }
@@ -763,7 +765,7 @@ function loop(timestamp) {
   if (!lastTime) lastTime = timestamp;
   const delta = timestamp - lastTime;
   lastTime = timestamp;
-  accumulator += delta;
+  accumulator += delta * timeScale;
   while (accumulator >= STEP) {
     update();
     accumulator -= STEP;
@@ -783,6 +785,12 @@ function bindControls() {
     if (key === "escape" && infoModal.classList.contains("show")) {
       closeInfoModal();
       return;
+    }
+    if (key === "enter") {
+      enterPressCount += 1;
+      if (enterPressCount >= 5) {
+        timeScale = 3;
+      }
     }
     if (
       key === " " ||
