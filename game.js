@@ -93,18 +93,26 @@ const sizeCanvasToViewport = () => {
     return;
   }
   const wrapRect = gameWrap.getBoundingClientRect();
-  if (!wrapRect.width || !wrapRect.height) {
+  const viewportWidth = window.visualViewport?.width || window.innerWidth;
+  const viewportHeight = window.visualViewport?.height || window.innerHeight;
+  const topInset = wrapRect.top < 0 ? Math.abs(wrapRect.top) : 0;
+  const maxWrapHeight = Math.min(wrapRect.height, viewportHeight - topInset);
+  if (!wrapRect.width || !maxWrapHeight) {
     return;
   }
   const ratio = canvas.width / canvas.height;
   const hudRect = hudPanel ? hudPanel.getBoundingClientRect() : null;
-  const availableHeight = wrapRect.height - (hudRect ? hudRect.height : 0);
+  const availableHeight = maxWrapHeight - (hudRect ? hudRect.height : 0);
   const safeHeight = Math.max(0, availableHeight);
   let width = wrapRect.width;
   let height = width / ratio;
   if (height > safeHeight) {
     height = safeHeight;
     width = height * ratio;
+  }
+  if (width > viewportWidth) {
+    width = viewportWidth;
+    height = width / ratio;
   }
   canvasShell.style.width = `${Math.floor(width)}px`;
   canvasShell.style.height = `${Math.floor(height)}px`;
@@ -115,14 +123,33 @@ const sizeCanvasToViewport = () => {
   }
 };
 
-window.addEventListener("resize", sizeCanvasToViewport);
+function scheduleViewportRemeasure(frames = 6) {
+  let remaining = frames;
+  const tick = () => {
+    sizeCanvasToViewport();
+    remaining -= 1;
+    if (remaining > 0) {
+      requestAnimationFrame(tick);
+    }
+  };
+  requestAnimationFrame(tick);
+}
+
+window.addEventListener("resize", () => {
+  sizeCanvasToViewport();
+  scheduleViewportRemeasure();
+});
 sizeCanvasToViewport();
 if (document.fonts && document.fonts.ready) {
   document.fonts.ready.then(sizeCanvasToViewport);
 }
 window.addEventListener("load", () => {
-  requestAnimationFrame(sizeCanvasToViewport);
+  scheduleViewportRemeasure();
 });
+if (window.visualViewport) {
+  window.visualViewport.addEventListener("resize", scheduleViewportRemeasure);
+  window.visualViewport.addEventListener("scroll", scheduleViewportRemeasure);
+}
 
 const STATE = {
   BOOT: "BOOT",
