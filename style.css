@@ -133,6 +133,7 @@ body {
   width: 100%;
   container-type: inline-size;
   container-name: hud-panel;
+  touch-action: manipulation;
 }
 
 
@@ -324,6 +325,7 @@ canvas {
   cursor: pointer;
   box-shadow: 0 10px 18px rgba(28, 21, 18, 0.25);
   display: none;
+  touch-action: manipulation;
 }
 
 .accuse-float.hud-accuse {
