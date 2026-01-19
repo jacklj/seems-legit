@@ -801,7 +801,8 @@ function draw() {
       const center = tileCenter({ x, y });
       if (sprites.loaded) {
         drawTile(x, y, COLORS.wall);
-        drawSpriteAt(sprites.kebab, center.x, center.y, TILE_PX * 2.6);
+        const angle = -timeSeconds * 0.35;
+        drawRotatedSprite(sprites.kebab, center.x, center.y, TILE_PX * 2.6, angle);
       } else {
         drawTile(x, y, COLORS.wall);
         ctx.fillStyle = COLORS.shopBad;
