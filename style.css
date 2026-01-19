@@ -65,6 +65,13 @@ body {
   margin-bottom: 5px;
   letter-spacing: 0.3em;
   text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media (max-width: 450px) {
+  .hero-title {
+    font-size: clamp(1.5rem, 2vw, 2rem);
+  }
 }
 
 .hero-subtitle {
@@ -185,18 +192,18 @@ body {
 .hud-stat {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
 }
 
 .hud-label {
   font-size: 0.75rem;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.04em;
 }
 
 .front-meter {
   display: flex;
-  gap: 6px;
+  gap: 1px;
 }
 
 .front-icon {

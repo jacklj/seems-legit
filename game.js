@@ -294,6 +294,7 @@ function startRound() {
   penaltyStacks = 0;
   freezeTimer = 0;
   hitCooldown = 0;
+  updateFrontMeter();
 
   const numEnemies = clamp(1 + roundIndex, 2, 5);
   buildShopSlots();
@@ -353,6 +354,12 @@ function startRound() {
       speed: 1.6 + roundIndex * 0.1,
     });
   }
+}
+
+function updateFrontMeter() {
+  frontIcons.forEach((icon, index) => {
+    icon.classList.toggle("exposed", index < exposedBadCount);
+  });
 }
 
 function showOverlay(title, body) {
@@ -555,6 +562,7 @@ function attemptAccuse() {
   if (nearShop.isBad) {
     nearShop.exposed = true;
     exposedBadCount += 1;
+    updateFrontMeter();
     freezeTimer = 60;
     messageText =
       SUCCESS_MESSAGES[Math.floor(Math.random() * SUCCESS_MESSAGES.length)];
@@ -595,9 +603,7 @@ function updateHUD() {
   const ratio = clueTarget === 0 ? 0 : clueMeter / clueTarget;
   clueFill.style.width = `${Math.floor(ratio * 100)}%`;
   clueText.textContent = `CLUES: ${clueMeter}/${clueTarget}`;
-  frontIcons.forEach((icon, index) => {
-    icon.classList.toggle("exposed", index < exposedBadCount);
-  });
+  updateFrontMeter();
   heatText.textContent = `x${(1 + penaltyStacks * 0.2).toFixed(1)}`;
   roundBadge.textContent = `Round ${roundIndex}`;
   const nearShop = getNearbyShop();
