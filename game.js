@@ -65,6 +65,30 @@ const MAP_WIDTH = BASE_MAP[0].length;
 
 canvas.width = MAP_WIDTH * TILE_PX;
 canvas.height = MAP_HEIGHT * TILE_PX;
+const canvasShell = canvas.parentElement;
+const gameWrap = document.querySelector(".game-wrap");
+
+const sizeCanvasToViewport = () => {
+  if (!canvasShell || !gameWrap) {
+    return;
+  }
+  const wrapRect = gameWrap.getBoundingClientRect();
+  if (!wrapRect.width || !wrapRect.height) {
+    return;
+  }
+  const ratio = canvas.width / canvas.height;
+  let width = wrapRect.width;
+  let height = width / ratio;
+  if (height > wrapRect.height) {
+    height = wrapRect.height;
+    width = height * ratio;
+  }
+  canvasShell.style.width = `${Math.floor(width)}px`;
+  canvasShell.style.height = `${Math.floor(height)}px`;
+};
+
+window.addEventListener("resize", sizeCanvasToViewport);
+sizeCanvasToViewport();
 
 const STATE = {
   BOOT: "BOOT",

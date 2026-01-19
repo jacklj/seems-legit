@@ -25,13 +25,14 @@ body {
 }
 
 .page {
-  max-width: 1100px;
+  width: 100%;
   margin: 0 auto;
-  padding: 24px 18px 40px;
+  padding: 18px 16px 24px;
   display: flex;
   flex-direction: column;
   gap: 24px;
   min-height: 100vh;
+  height: 100vh;
 }
 
 .hero {
@@ -171,24 +172,24 @@ body {
 }
 
 .game-wrap {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 18px;
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  align-items: center;
+  justify-content: center;
 }
 
 .canvas-shell {
   position: relative;
   padding: 0;
   width: 100%;
-  max-width: min(92vw, 620px, calc(70vh * 21 / 27));
+  height: 100%;
   margin: 0 auto;
 }
 
 canvas {
   width: 100%;
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: 21 / 27;
+  height: 100%;
   display: block;
   margin: 0;
   border-radius: 0;
@@ -322,11 +323,6 @@ canvas {
 }
 
 @media (min-width: 860px) {
-  .game-wrap {
-    grid-template-columns: minmax(0, 1fr) 260px;
-    align-items: center;
-  }
-
   .controls {
     flex-direction: column;
     align-items: stretch;
