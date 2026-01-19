@@ -307,8 +307,35 @@ canvas {
   position: relative;
 }
 
-.modal-card h3 {
-  margin-bottom: -15px;
+
+.sprite-title {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.sprite-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px 12px;
+  margin: 8px 0 16px;
+}
+
+.sprite-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 6px 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(28, 21, 18, 0.12);
+  background: rgba(255, 255, 255, 0.5);
+  font-size: 0.82rem;
+  line-height: 1.2;
+}
+
+.sprite-item img {
+  width: 54px;
+  height: 54px;
+  image-rendering: pixelated;
 }
 
 .modal-close {
