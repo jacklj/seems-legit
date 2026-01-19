@@ -13,24 +13,27 @@
 - Rendering uses HTML5 `<canvas>` with simple shapes or optional sprites.
 
 ### Gameplay Summary
-- Top-down maze; collect clues to fill a meter and accuse shops when full.
-- Expose 3 bad shops to win; wrong accusations permanently speed up enemies.
+- Top-down maze; collect clue pips (sparser, randomized) to fill a meter and accuse shops when full.
+- Expose 3 bad shops to win; wrong accusations increase heat, correct accusations reduce it (min 1x).
+- Lose if remaining clue pips cannot cover the remaining accusations.
 - Each round adds enemies/shops and increases speed with randomized placements.
 
 ### Core Systems
-- Fixed-timestep loop with state machine: `BOOT` → `ROUND_INTRO` → `PLAYING` → `ROUND_WIN` → `NEXT_ROUND`.
-- Tile grid (21x27 typical) with `WALL`, `PATH`, `CLUE`, `SHOP`, `SPAWN_PLAYER`, `SPAWN_ENEMY`.
+- Fixed-timestep loop with state machine: `BOOT` → `ROUND_INTRO` → `PLAYING` → `ROUND_WIN`/`ROUND_LOSE`.
+- Tile grid (21x27 typical) with `WALL`, `PATH`, `CLUE`, `SHOP`, `SPAWN_PLAYER`, `SPAWN_ENEMY`, `D` (shank).
 - Player grid-snaps at tile centers; enemies choose directions via simple greedy/random mix.
-- Accusation: require full meter and proximity; success exposes a bad shop, failure adds speed penalty.
+- Accusation: require full meter and proximity; success exposes a bad shop, failure adds heat penalty.
+- Roadman hit resets clue meter to 0; heat scales enemy speed.
 
 ### Round Scaling & Defaults
-- `numEnemies = clamp(1 + floor(roundIndex/2), 1, 5)`; `numShops = clamp(5 + roundIndex, 5, 12)`.
-- `badShopCount = 3`; `clueTarget = 20 + roundIndex*5`; `enemySpeedBase = 1.2 + roundIndex*0.1`.
-- Suggested defaults: tile 16px (scaled 3x), player speed 2.0, enemy base 1.6, penalty +0.2.
+- `numEnemies = clamp(1 + roundIndex, 2, 5)`; `numShops = min(shopSlots, 4 + (roundIndex - 1))`.
+- `badShopCount = 3`; `clueTarget = 10`; `enemySpeedBase = 1.6 + roundIndex*0.1`.
+- `CLUE_PIP_RATIO = 0.5` controls how many road tiles get clue pips.
+- Suggested defaults: tile 16px (scaled 3x), player speed 2.0, heat penalty +0.2 per wrong accuse.
 
 ### UI, Controls, Rendering
-- HUD: clue meter, exposed count, heat; round intro overlay.
-- Controls: arrows/WASD + `Space` + button to accuse. On mobile, click quaderants of the game to go up down left right.
+- HUD: clue meter, front meter icons, heat meter with roadman icon; round intro/lose overlay.
+- Controls: arrows/WASD + `Space` + button to accuse. On mobile, tap quadrants of the game to go up/down/left/right.
 - Draw order: walls → clues → shops → player → enemies → HUD; `imageSmoothingEnabled = false`.
 
 ### Implementation Checklist
