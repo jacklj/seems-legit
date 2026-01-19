@@ -8,6 +8,12 @@
   --shadow: rgba(28, 21, 18, 0.18);
 }
 
+@font-face {
+  font-family: "Aerosoldier";
+  src: url("aerosoldier/Aerosoldier_PERSONAL_USE_ONLY.otf") format("opentype");
+  font-display: swap;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -34,6 +40,7 @@ body {
   height: 100vh;
 }
 
+
 .hero {
   display: flex;
   flex-wrap: wrap;
@@ -51,11 +58,12 @@ body {
 
 .hero-title {
   display: block;
-  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  font-family: "Aerosoldier", "Palatino Linotype", "Book Antiqua", Palatino, serif;
   font-size: clamp(2rem, 3vw, 3rem);
   margin: 0;
   margin-top: 6px;
-  letter-spacing: 0.04em;
+  margin-bottom: 5px;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
 }
 
@@ -66,7 +74,7 @@ body {
   margin: 0;
   margin-top: -5px;
   margin-bottom: 10px;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.06em;
   font-style: italic;
 }
 
