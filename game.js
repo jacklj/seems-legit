@@ -6,7 +6,10 @@ ctx.imageSmoothingEnabled = false;
 
 const clueFill = document.getElementById("clueFill");
 const clueText = document.getElementById("clueText");
-const exposedText = document.getElementById("exposedText");
+const frontMeter = document.getElementById("frontMeter");
+const frontIcons = frontMeter
+  ? Array.from(frontMeter.querySelectorAll(".front-icon"))
+  : [];
 const heatText = document.getElementById("heatText");
 const accuseFloat = document.getElementById("accuseFloat");
 const roundBadge = document.getElementById("roundBadge");
@@ -592,8 +595,10 @@ function updateHUD() {
   const ratio = clueTarget === 0 ? 0 : clueMeter / clueTarget;
   clueFill.style.width = `${Math.floor(ratio * 100)}%`;
   clueText.textContent = `CLUES: ${clueMeter}/${clueTarget}`;
-  exposedText.textContent = `FRONTS: ${exposedBadCount}/3`;
-  heatText.textContent = `HEAT: x${(1 + penaltyStacks * 0.2).toFixed(1)}`;
+  frontIcons.forEach((icon, index) => {
+    icon.classList.toggle("exposed", index < exposedBadCount);
+  });
+  heatText.textContent = `x${(1 + penaltyStacks * 0.2).toFixed(1)}`;
   roundBadge.textContent = `Round ${roundIndex}`;
   const nearShop = getNearbyShop();
   const dist = nearestShopDistance();
