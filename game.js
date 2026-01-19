@@ -508,7 +508,7 @@ function updateHUD() {
   const ratio = clueTarget === 0 ? 0 : clueMeter / clueTarget;
   clueFill.style.width = `${Math.floor(ratio * 100)}%`;
   clueText.textContent = `CLUES: ${clueMeter}/${clueTarget}`;
-  exposedText.textContent = `Exposed: ${exposedBadCount}/3`;
+  exposedText.textContent = `FRONTS: ${exposedBadCount}/3`;
   heatText.textContent = `HEAT: x${(1 + penaltyStacks * 0.2).toFixed(1)}`;
   roundBadge.textContent = `Round ${roundIndex}`;
   const nearShop = getNearbyShop();
