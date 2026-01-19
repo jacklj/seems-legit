@@ -302,7 +302,7 @@ canvas {
   background: #f8f0e6;
   border-radius: 16px;
   padding: 20px 22px;
-  max-width: 420px;
+  max-width: 560px;
   max-height: min(80vh, 720px);
   overflow-y: auto;
   box-shadow: 0 18px 40px var(--shadow);
