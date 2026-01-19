@@ -39,6 +39,7 @@ const TILE = 16;
 const SCALE = 3;
 const TILE_PX = TILE * SCALE;
 const CLUE_TARGET = 10;
+const CLUE_PIP_RATIO = 0.5;
 
 const DIRS = {
   up: { x: 0, y: -1 },
@@ -346,6 +347,7 @@ function startRound() {
 
   roadTiles = [];
   clues.clear();
+  const eligibleClues = [];
   for (let y = 0; y < MAP_HEIGHT; y += 1) {
     for (let x = 0; x < MAP_WIDTH; x += 1) {
       if (tiles[y][x] !== 1) continue;
@@ -354,9 +356,15 @@ function startRound() {
       if (isShop) continue;
       if (x === playerSpawn.x && y === playerSpawn.y) continue;
       if (enemySpawns.some((spawn) => spawn.x === x && spawn.y === y)) continue;
-      clues.add(keyFor(x, y));
+      eligibleClues.push({ x, y });
     }
   }
+  const clueCount = Math.round(eligibleClues.length * CLUE_PIP_RATIO);
+  shuffle(eligibleClues)
+    .slice(0, clueCount)
+    .forEach((tile) => {
+      clues.add(keyFor(tile.x, tile.y));
+    });
 
   const spawnCenter = tileCenter(playerSpawn);
   player.x = spawnCenter.x;
