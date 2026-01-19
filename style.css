@@ -45,6 +45,7 @@ body {
   padding: 18px 22px;
   box-shadow: 0 12px 30px var(--shadow);
   position: relative;
+  width: 100%;
 }
 
 .hero-title {
@@ -123,12 +124,13 @@ body {
 
 .meter {
   background: #efe3d6;
-  height: 12px;
+  height: 16px;
   border-radius: 999px;
   overflow: hidden;
   border: 1px solid rgba(28, 21, 18, 0.2);
   min-width: 150px;
   margin-left: 0;
+  position: relative;
 }
 
 .meter-fill {
@@ -138,12 +140,27 @@ body {
   transition: width 0.2s ease;
 }
 
+.meter-text {
+  position: absolute;
+  inset: 0;
+  padding-left: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  pointer-events: none;
+}
+
 .hud-stats {
   display: flex;
   gap: 12px;
   justify-content: flex-start;
   font-size: 0.9rem;
-  /* text-transform: uppercase; */
+  text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
