@@ -181,6 +181,14 @@ let hitCooldown = 0;
 let messageTimer = 0;
 let messageText = "";
 let messageColor = "#d9332b";
+const SUCCESS_MESSAGES = [
+  "Nice one! I thought there were too many barber shops here...",
+  "Case closed. That shop was washing more than towels.",
+  "Exposed! The receipts were doing the moonwalk.",
+  "Front busted. That 'cash only' sign was doing a lot.",
+  "You clocked it. That shop was squeaky clean for a reason.",
+  "Good spot. That till was too busy for a quiet street.",
+];
 let tapDir = null;
 let tapTimer = 0;
 let tapPos = { x: 0, y: 0 };
@@ -523,7 +531,8 @@ function attemptAccuse() {
     nearShop.exposed = true;
     exposedBadCount += 1;
     freezeTimer = 60;
-    messageText = "Nice one! I thought there were too many barber shops here...";
+    messageText =
+      SUCCESS_MESSAGES[Math.floor(Math.random() * SUCCESS_MESSAGES.length)];
     messageColor = "#2f8f5b";
     messageTimer = 120;
     if (exposedBadCount >= 3) {
