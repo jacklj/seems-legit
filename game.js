@@ -939,6 +939,22 @@ function setNextDir(dir) {
   player.nextDir = dir;
 }
 
+function preventDoubleTapZoom(element) {
+  if (!element) return;
+  let lastTap = 0;
+  element.addEventListener(
+    "touchend",
+    (event) => {
+      const now = Date.now();
+      if (now - lastTap <= 300) {
+        event.preventDefault();
+      }
+      lastTap = now;
+    },
+    { passive: false }
+  );
+}
+
 function bindControls() {
   window.addEventListener("keydown", (event) => {
     const key = event.key.toLowerCase();
@@ -969,6 +985,9 @@ function bindControls() {
   });
 
   accuseFloat.addEventListener("click", attemptAccuse);
+  preventDoubleTapZoom(accuseFloat);
+  preventDoubleTapZoom(hudPanel);
+  preventDoubleTapZoom(infoBtn);
 
   canvas.addEventListener("pointerdown", (event) => {
     const rect = canvas.getBoundingClientRect();
